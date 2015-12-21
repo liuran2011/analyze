@@ -1,0 +1,8 @@
+LOG_DIR="/var/log/analyze"
+RUN_DIR="/var/run/analyze"
+CONF_DIR="/etc/analyze"
+
+SEARCH_ENGINE="search_engine"
+SEARCH_ENGINE_LOG_DIR='/'.join([LOG_DIR,SEARCH_ENGINE])
+SEARCH_ENGINE_RUN_DIR='/'.join([RUN_DIR,SEARCH_ENGINE])
+SEARCH_ENGINE_CONF_DIR='/'.join([CONF_DIR,SEARCH_ENGINE])
