@@ -9,7 +9,7 @@ class SearchEngineConf(BasicConf):
         return self.parser.get(DEFAULT,URL)
 
     def search_interval(self):
-        return self.parser.get(DEFAULT,SEARCH_INTERVAL)
+        return int(self.parser.get(DEFAULT,SEARCH_INTERVAL))
 
     def enable(self):
         return self.parser.get(DEFAULT,ENABLE)

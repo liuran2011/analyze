@@ -1,5 +1,5 @@
-from sgmllib import SGMLParser
+from HTMLParser import HTMLParser
 
-class HTMLParserBase(SGMLParser):
+class HTMLParserBase(HTMLParser):
     def __init__(self):
-        SGMLParser.__init__(self)
+        HTMLParser.__init__(self)

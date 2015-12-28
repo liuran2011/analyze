@@ -32,7 +32,7 @@ class SearchEngine(SearchEngineBase):
 
         print self.html_parser.search_result_href
         for link in self.html_parser.search_result_href:
-            self._search_negative_word(self,user,link)
+            self._search_negative_word(user,link)
 
     def _search_user(self,user):
         print "username:",user['username']
@@ -41,7 +41,7 @@ class SearchEngine(SearchEngineBase):
 
         for keyword in user['keyword']:
             self._search_keyword(user,keyword)
-            time.sleep(self.search_interval())
+            time.sleep(self.conf.search_interval())
 
     def start(self):
         print "sogou search engine running...."
@@ -49,4 +49,4 @@ class SearchEngine(SearchEngineBase):
         for user in self.user_list:
             self._search_user(user)
 
-            time.sleep(self.search_interval())
+            time.sleep(self.conf.search_interval())
