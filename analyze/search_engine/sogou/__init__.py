@@ -19,6 +19,7 @@ class SearchEngine(SearchEngineBase):
         return self.fetch_page(search_url)
 
     def _search_negative_word(self,user,link):
+        
         pass
 
     def _search_keyword(self,user,keyword):

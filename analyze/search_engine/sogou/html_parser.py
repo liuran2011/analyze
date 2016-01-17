@@ -8,6 +8,9 @@ class SogouHTMLParser(HTMLParserBase):
 
     def reset_parser(self):
         self.search_result_div_start=False
+        self.vrwrap_div_start=False
+        self.h3_start=False
+        self.vrwrap_div_level=0
         self.search_result_div_level=0
         self.search_result_href=[]
         self.div_level=0
@@ -22,10 +25,25 @@ class SogouHTMLParser(HTMLParserBase):
 
         return False
 
+    def _vrwrap_div(self,attrs):
+        if len(attrs)==0:
+            return False
+
+        for attr in attrs:
+            if attr[0]=='class' and (attr[1]=='vrwrap' or attr[1]=='rb'):
+                return True
+
+        return False
+
     def _handle_start_div(self,attrs):
         if self._results_div(attrs):
             self.search_result_div_start=True
             self.search_result_div_level=self.div_level
+            print "results div started."
+        elif self._vrwrap_div(attrs):
+            self.vrwrap_div_start=True
+            self.vrwrap_div_level=self.div_level
+            print "vrwrap div started."
 
         self.div_level+=1
 
@@ -36,37 +54,64 @@ class SogouHTMLParser(HTMLParserBase):
 
         self.search_result_href.append(href)
 
+    def _handle_start_h3(self,attrs):
+        if (not self.search_result_div_start 
+            or not self.vrwrap_div_start):
+            return
+
+        self.h3_start=True
+
+    def _handle_end_h3(self):
+        self.h3_start=False
+
     def _handle_end_div(self):
         self.div_level-=1
 
         if (self.search_result_div_start 
             and self.div_level==self.search_result_div_level):
             self.search_result_div_start=False
+            print "results div end."
+
+        if (self.vrwrap_div_start
+            and self.div_level==self.vrwrap_div_level):
+            self.vrwrap_div_start=False
+            print "vrwrap div end."
 
     def handle_starttag(self,tag,attrs):
         if tag=='div':
             self._handle_start_div(attrs)
         elif tag=='a':
             self._handle_start_a(attrs)
+        elif tag=='h3':
+            self._handle_start_h3(attrs)
 
     def handle_endtag(self,tag):
         if tag=='div':
             self._handle_end_div()
-            
+        elif tag=='h3':
+            self._handle_end_h3()
+
     def _result_href(self,attrs):
         if len(attrs)==0:
             return None
-        
+       
+        if not self.search_result_div_start:
+            return None
+
+        if not self.vrwrap_div_start:
+            return None
+
+        if not self.h3_start:
+            return None
+
         href=None
-        filterd=True
 
         for attr in attrs:
             if attr[0]=='href':
                 href=attr[1]
-            elif attr[0]=='target' and attr[1]=='_blank':
-                filterd=False
+                break
 
-        if not href or filterd:
+        if not href:
             return None
 
         if (not href.startswith('http://') 
