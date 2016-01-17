@@ -30,6 +30,7 @@ class SearchEngine(SearchEngineBase):
         if len(self.html_parser.search_result_href)==0:
             return
 
+        print len(self.html_parser.search_result_href)
         print self.html_parser.search_result_href
         for link in self.html_parser.search_result_href:
             self._search_negative_word(user,link)

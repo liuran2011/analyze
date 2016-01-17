@@ -56,9 +56,21 @@ class SogouHTMLParser(HTMLParserBase):
     def _result_href(self,attrs):
         if len(attrs)==0:
             return None
-       
+        
+        href=None
+        filterd=True
+
         for attr in attrs:
             if attr[0]=='href':
-                return attr[1]
+                href=attr[1]
+            elif attr[0]=='target' and attr[1]=='_blank':
+                filterd=False
 
-        return None
+        if not href or filterd:
+            return None
+
+        if (not href.startswith('http://') 
+            and not href.startswith('https://')):
+            return None
+
+        return href
