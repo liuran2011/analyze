@@ -18,6 +18,7 @@ class SogouHTMLParser(HTMLParserBase):
         self.search_result_href=[]
         self.div_level=0
         self.redirect_url=None
+        self.reset()
 
     def _results_div(self,attrs):
         if len(attrs)==0:

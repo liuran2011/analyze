@@ -27,12 +27,16 @@ class SearchEngine(SearchEngineBase):
         if not page:
             return
 
-        self.html_parser.reset_parser()
-        self.html_parser.feed(page)
+        try:
+            self.html_parser.reset_parser()
+            self.html_parser.feed(page)
+        except:
+            print "parse link:",link,"failed."
+            return
+
+
         if self.html_parser.redirect_url:
             page=self.fetch_page(self.html_parser.redirect_url)
-
-        print 'pageeeeeeeeeeeeeeeeeeeeee:',page
 
         for negative_word in user['negative_word']:
             self._search_one_negative_word(user,page,negative_word)
