@@ -3,6 +3,7 @@
 import sys
 import time
 import urllib
+import copy
 from search_engine.search_engine_base import SearchEngineBase
 from html_parser import SogouHTMLParser
 
@@ -42,20 +43,48 @@ class SearchEngine(SearchEngineBase):
         for negative_word in user['negative_word']:
             self._search_one_negative_word(user,page,negative_word)
 
+
     def _search_keyword(self,user,keyword):
         abs_page=self._first_abs_page(keyword)
         if not abs_page:
             return
 
         self.html_parser.reset_parser()
-
         self.html_parser.feed(abs_page)
         if len(self.html_parser.search_result_href)==0:
             return
 
-        print len(self.html_parser.search_result_href)
-        for link in self.html_parser.search_result_href:
-            self._search_negative_word(user,link)
+        self.page_cout=0
+
+        while True:
+            if self.page_count>=self.max_page:
+                break
+           
+            nextpage_url=None
+
+            if self.html_parser.nextpage_url:
+                nextpage_url=self.conf.url()+self.html_parser.nextpage_url
+            
+            search_result_href=copy.deepcopy(self.html_parser.search_result_href)
+            for link in search_result_href:
+                self._search_negative_word(user,link)
+
+            if not nextpage_url:
+                break
+
+            time.sleep(self.conf.search_interval())
+
+            page=self.fetch_page(nextpage_url)
+            if not page:
+                break
+
+            print "search next page:",nextpage_url
+
+            self.html_parser.reset_parser()
+            self.html_parser.feed(page)
+
+            if len(self.html_parser.search_result_href)==0:
+                break
 
     def _search_user(self,user):
         print "username:",user['username']

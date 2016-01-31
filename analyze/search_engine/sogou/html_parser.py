@@ -54,7 +54,7 @@ class SogouHTMLParser(HTMLParserBase):
             if attr[0]=='class' and attr[1]=='p':
                 class_p=True
             elif attr[0]=='id' and attr[1]=='pagebar_container':
-                id_contrainer=True
+                id_container=True
 
         if class_p and id_container:
             return True
@@ -86,7 +86,7 @@ class SogouHTMLParser(HTMLParserBase):
             self.vrwrap_div_start=True
             self.vrwrap_div_level=self.div_level
         elif self._pagebar_div(attrs):
-            self.pagebar_div_start=True;
+            self.pagebar_div_start=True
             self.pagebar_div_level=self.div_level
 
         self.div_level+=1
@@ -97,7 +97,7 @@ class SogouHTMLParser(HTMLParserBase):
             self.nextpage_url="/web"+href;
             return
 
-        href=self._result_href(attrs):
+        href=self._result_href(attrs)
         if not href:
             return
 
@@ -147,7 +147,7 @@ class SogouHTMLParser(HTMLParserBase):
     def _pagebar_href(self,attrs):
         if not self.pagebar_div_start:
             return None
-        
+       
         a_id=False
         href=None
 
