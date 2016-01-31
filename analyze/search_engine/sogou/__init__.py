@@ -13,6 +13,7 @@ class SearchEngine(SearchEngineBase):
                         'keyword':['中兴通讯'],
                         'negative_word':['不好','垃圾','渣渣','不合法','不给力']}]
         self.html_parser=SogouHTMLParser()
+        self.page_count=0
 
     def _first_abs_page(self,search_keyword):
         search_url=self.conf.url()+"/web?query="+search_keyword+"&_asf=www.sogou.com&_ast=&w=01019900&p=40040100&ie=utf8&sut=7403&sst0=1451221676273&lkt=0%2C0%2C0"

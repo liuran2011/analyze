@@ -18,6 +18,9 @@ class SogouHTMLParser(HTMLParserBase):
         self.search_result_href=[]
         self.div_level=0
         self.redirect_url=None
+        self.pagebar_div_start=False
+        self.pagebar_div_level=0
+        self.nextpage_url=None
         self.reset()
 
     def _results_div(self,attrs):
@@ -37,6 +40,24 @@ class SogouHTMLParser(HTMLParserBase):
         for attr in attrs:
             if attr[0]=='class' and (attr[1]=='vrwrap' or attr[1]=='rb'):
                 return True
+
+        return False
+
+    def _pagebar_div(self,attrs):
+        if len(attrs)==0:
+            return False
+
+        class_p=False
+        id_container=False
+
+        for attr in attrs:
+            if attr[0]=='class' and attr[1]=='p':
+                class_p=True
+            elif attr[0]=='id' and attr[1]=='pagebar_container':
+                id_contrainer=True
+
+        if class_p and id_container:
+            return True
 
         return False
 
@@ -64,11 +85,19 @@ class SogouHTMLParser(HTMLParserBase):
         elif self._vrwrap_div(attrs):
             self.vrwrap_div_start=True
             self.vrwrap_div_level=self.div_level
+        elif self._pagebar_div(attrs):
+            self.pagebar_div_start=True;
+            self.pagebar_div_level=self.div_level
 
         self.div_level+=1
 
     def _handle_start_a(self,attrs):
-        href=self._result_href(attrs)
+        href=self._pagebar_href(attrs)
+        if href:
+            self.nextpage_url="/web"+href;
+            return
+
+        href=self._result_href(attrs):
         if not href:
             return
 
@@ -95,6 +124,10 @@ class SogouHTMLParser(HTMLParserBase):
             and self.div_level==self.vrwrap_div_level):
             self.vrwrap_div_start=False
 
+        if (self.pagebar_div_start
+            and self.div_level==self.pagebar_div_level):
+            self.pagebar_div_start=False
+
     def handle_starttag(self,tag,attrs):
         if tag=='div':
             self._handle_start_div(attrs)
@@ -110,6 +143,24 @@ class SogouHTMLParser(HTMLParserBase):
             self._handle_end_div()
         elif tag=='h3':
             self._handle_end_h3()
+
+    def _pagebar_href(self,attrs):
+        if not self.pagebar_div_start:
+            return None
+        
+        a_id=False
+        href=None
+
+        for attr in attrs:
+            if attr[0]=='id' and attr[1]=='sogou_next':
+                a_id=True
+            elif attr[0]=='href':
+                href=attr[1]
+
+        if (not a_id) or (not href):
+            return None
+        
+        return href
 
     def _result_href(self,attrs):
         if len(attrs)==0:
