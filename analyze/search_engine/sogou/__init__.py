@@ -1,5 +1,6 @@
 #coding=utf-8
 
+import sys
 import time
 import urllib
 from search_engine.search_engine_base import SearchEngineBase
@@ -14,25 +15,40 @@ class SearchEngine(SearchEngineBase):
         self.html_parser=SogouHTMLParser()
 
     def _first_abs_page(self,search_keyword):
-        
         search_url=self.conf.url()+"/web?query="+search_keyword+"&_asf=www.sogou.com&_ast=&w=01019900&p=40040100&ie=utf8&sut=7403&sst0=1451221676273&lkt=0%2C0%2C0"
         return self.fetch_page(search_url)
 
-    def _search_negative_word(self,user,link):
+    def _search_one_negative_word(self,user,page,word):
         
-        pass
+        print "user:",user['username'],"neg word:",word
+
+    def _search_negative_word(self,user,link):
+        page=self.fetch_page(link) 
+        if not page:
+            return
+
+        self.html_parser.reset_parser()
+        self.html_parser.feed(page)
+        if self.html_parser.redirect_url:
+            page=self.fetch_page(self.html_parser.redirect_url)
+
+        print 'pageeeeeeeeeeeeeeeeeeeeee:',page
+
+        for negative_word in user['negative_word']:
+            self._search_one_negative_word(user,page,negative_word)
 
     def _search_keyword(self,user,keyword):
         abs_page=self._first_abs_page(keyword)
         if not abs_page:
             return
 
+        self.html_parser.reset_parser()
+
         self.html_parser.feed(abs_page)
         if len(self.html_parser.search_result_href)==0:
             return
 
         print len(self.html_parser.search_result_href)
-        print self.html_parser.search_result_href
         for link in self.html_parser.search_result_href:
             self._search_negative_word(user,link)
 

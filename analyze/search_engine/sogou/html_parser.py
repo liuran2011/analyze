@@ -1,3 +1,6 @@
+#coding=utf-8
+
+import re
 from search_engine.html_parser_base import HTMLParserBase
 
 class SogouHTMLParser(HTMLParserBase):
@@ -14,7 +17,8 @@ class SogouHTMLParser(HTMLParserBase):
         self.search_result_div_level=0
         self.search_result_href=[]
         self.div_level=0
-    
+        self.redirect_url=None
+
     def _results_div(self,attrs):
         if len(attrs)==0:
             return False
@@ -35,15 +39,30 @@ class SogouHTMLParser(HTMLParserBase):
 
         return False
 
+    def _is_redirect(self,attrs):
+        for attr in attrs:
+            if attr[0]=='http-equiv' and attr[1].upper()=='REFRESH':
+                return True
+
+        return False
+
+    def _handle_meta(self,attrs):
+        if not self._is_redirect(attrs):
+            return
+
+        for attr in attrs:
+            if attr[0].upper()=='CONTENT':
+                r=re.search("URL='(.*)'",attr[1])
+                if r:
+                    self.redirect_url=r.groups()[0]
+
     def _handle_start_div(self,attrs):
         if self._results_div(attrs):
             self.search_result_div_start=True
             self.search_result_div_level=self.div_level
-            print "results div started."
         elif self._vrwrap_div(attrs):
             self.vrwrap_div_start=True
             self.vrwrap_div_level=self.div_level
-            print "vrwrap div started."
 
         self.div_level+=1
 
@@ -70,12 +89,10 @@ class SogouHTMLParser(HTMLParserBase):
         if (self.search_result_div_start 
             and self.div_level==self.search_result_div_level):
             self.search_result_div_start=False
-            print "results div end."
 
         if (self.vrwrap_div_start
             and self.div_level==self.vrwrap_div_level):
             self.vrwrap_div_start=False
-            print "vrwrap div end."
 
     def handle_starttag(self,tag,attrs):
         if tag=='div':
@@ -84,7 +101,9 @@ class SogouHTMLParser(HTMLParserBase):
             self._handle_start_a(attrs)
         elif tag=='h3':
             self._handle_start_h3(attrs)
-
+        elif tag.upper()=='META':
+            self._handle_meta(attrs)
+      
     def handle_endtag(self,tag):
         if tag=='div':
             self._handle_end_div()
