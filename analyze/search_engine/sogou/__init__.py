@@ -8,11 +8,8 @@ from search_engine.search_engine_base import SearchEngineBase
 from html_parser import SogouHTMLParser
 
 class SearchEngine(SearchEngineBase):
-    def __init__(self,conf):
-        super(SearchEngine,self).__init__(conf)
-        self.user_list=[{'username':'liuran',
-                        'keyword':['中兴通讯'],
-                        'negative_word':['不好','垃圾','渣渣','不合法','不给力']}]
+    def __init__(self,conf,env):
+        super(SearchEngine,self).__init__(conf,env)
         self.html_parser=SogouHTMLParser()
         self.page_count=0
 
@@ -86,19 +83,11 @@ class SearchEngine(SearchEngineBase):
             if len(self.html_parser.search_result_href)==0:
                 break
 
-    def _search_user(self,user):
+    def search_user(self,user):
         print "username:",user['username']
         print 'keyword:',user['keyword']
         print 'negative_word:',user['negative_word']
 
         for keyword in user['keyword']:
             self._search_keyword(user,keyword)
-            time.sleep(self.conf.search_interval())
-
-    def start(self):
-        print "sogou search engine running...."
-        
-        for user in self.user_list:
-            self._search_user(user)
-
             time.sleep(self.conf.search_interval())

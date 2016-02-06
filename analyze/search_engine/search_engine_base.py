@@ -1,8 +1,14 @@
 import urllib
 from user_info_mgr import UserInfoMgr
 import copy
+import time
+
+class NotImplementException(Exception):
+    """Function method not implement exception."""
 
 class SearchEngineBase(object):
+    USER_LIST_EMPTY_RESCHED_INTERVAL=5
+
     def __init__(self,conf,env):
         self.conf=conf
         self.max_page=100
@@ -26,3 +32,22 @@ class SearchEngineBase(object):
             print "open url:%s failed."%(url)
             return page
 
+    def search_user(self,user):
+        raise NotImplementException("search_user not implement")
+
+    def start(self):
+        print "search engine running..."
+
+        while True:
+            self.user_list_reload()
+
+            if len(self.user_list)==0:
+                time.sleep(SearchEngineBase.USER_LIST_EMPTY_RESCHED_INTERVAL)
+                continue
+
+            for user in self.user_list:
+                self.search_user(user)
+
+                time.sleep(self.conf.search_interval())
+
+            time.sleep(self.conf.search_interval())
