@@ -1,6 +1,9 @@
 #! /usr/bin/env python
 #coding=utf-8
 
+import gevent.monkey
+gevent.monkey.patch_all()
+
 import os
 import multiprocessing
 from env.search_engine_env import SearchEngineEnv
