@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import gevent
 from conf.search_engine_conf import SearchEngineConf
 import importlib
 
@@ -10,8 +11,9 @@ class SearchEngineLoader(object):
         
         module_name="search_engine.%s"%(self.conf.engine_name())
         m=importlib.import_module(module_name)
-        self.engine=m.SearchEngine(self.conf)
+        self.engine=m.SearchEngine(self.conf,self.env)
 
     def start(self):
-        self.engine.start()
+        gevent.spawn(self.engine.start())
+        gevent.wait()
 
