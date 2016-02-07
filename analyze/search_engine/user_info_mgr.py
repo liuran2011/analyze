@@ -2,7 +2,6 @@ import gevent
 import pickle
 import os
 import time
-import threading
 from utils import FileLock
 
 class UserInfoMgr(object):
@@ -12,14 +11,7 @@ class UserInfoMgr(object):
         self.env=env
         self._user_info=[]
         self._update_task=gevent.spawn(self._update)
-        self._lock=threading.Lock()
         self.file_lock=FileLock(self.env.lock_file())
-
-    def lock(self):
-        self._lock.acquire()
-
-    def unlock(self):
-        self._lock.release()
 
     def user_info(self):
         return self._user_info
@@ -31,9 +23,7 @@ class UserInfoMgr(object):
                 f=open(self.env.user_info_file())
                 s=f.read()
                 if len(s)!=0:
-                    self.lock()
                     self._user_info=pickle.loads(s)
-                    self.unlock()
                 f.close()
                 self.file_lock.unlock()
             except IOError:

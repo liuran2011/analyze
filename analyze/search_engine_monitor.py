@@ -9,6 +9,7 @@ import multiprocessing
 from env.search_engine_env import SearchEngineEnv
 from search_engine.search_engine_loader import SearchEngineLoader
 from search_engine.user_info_export import UserInfoExport
+from log.log import LOG
 
 class SearchEngineMonitor(object):
     def __init__(self):
@@ -17,7 +18,7 @@ class SearchEngineMonitor(object):
 
         self.engine_process=[]
 
-        self.user_info=[{'username': 'liuran', 'negative_word': ['bad', 'rabbish'], 'keyword': ['zte']}]
+        self.user_info=[]
         self.user_info_export=UserInfoExport(self.env)
        
         self.user_info_export.export(self.user_info)

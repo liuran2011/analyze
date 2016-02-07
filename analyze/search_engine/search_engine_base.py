@@ -17,9 +17,7 @@ class SearchEngineBase(object):
         self.user_list=[]
 
     def user_list_reload(self):
-        self.user_info_mgr.lock()
         self.user_list=copy.deepcopy(self.user_info_mgr.user_info())
-        self.user_info_mgr.unlock()
 
     def fetch_page(self,url):
         page=None
