@@ -8,12 +8,19 @@ import os
 import multiprocessing
 from env.search_engine_env import SearchEngineEnv
 from search_engine.search_engine_loader import SearchEngineLoader
+from search_engine.user_info_export import UserInfoExport
 
 class SearchEngineMonitor(object):
     def __init__(self):
         self.env=SearchEngineEnv()
         self.env.check()
+
         self.engine_process=[]
+
+        self.user_info=[{'username': 'liuran', 'negative_word': ['bad', 'rabbish'], 'keyword': ['zte']}]
+        self.user_info_export=UserInfoExport(self.env)
+       
+        self.user_info_export.export(self.user_info)
 
     def _load_engine(self,conf_file):
         print "loading search engine %s..."%(conf_file)

@@ -1,9 +1,9 @@
 import gevent
-import fcntl
 import pickle
 import os
 import time
 import threading
+from utils import FileLock
 
 class UserInfoMgr(object):
     USER_INFO_UPDATE_INTERVAL=5
@@ -13,6 +13,7 @@ class UserInfoMgr(object):
         self._user_info=[]
         self._update_task=gevent.spawn(self._update)
         self._lock=threading.Lock()
+        self.file_lock=FileLock(self.env.lock_file())
 
     def lock(self):
         self._lock.acquire()
@@ -26,15 +27,15 @@ class UserInfoMgr(object):
     def _update(self):
         while True:
             try:
-                f=open(self.env.lock_file())
-                fcntl.flock(f.fileno(),fcntl.LOCK_EX)
+                self.file_lock.lock()
+                f=open(self.env.user_info_file())
                 s=f.read()
                 if len(s)!=0:
                     self.lock()
                     self._user_info=pickle.loads(s)
                     self.unlock()
-                fcntl.flock(f.fileno(),fcntl.LOCK_UN)
                 f.close()
+                self.file_lock.unlock()
             except IOError:
                 os.mknod(self.env.lock_file())
 

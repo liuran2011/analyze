@@ -15,6 +15,9 @@ class SearchEngineEnv(Env):
     def lock_file(self):
         return SEARCH_ENGINE_LOCK
 
+    def user_info_file(self):
+        return SEARCH_ENGINE_USER_INFO
+
     @staticmethod
     def check():
         Env.check()
@@ -27,3 +30,6 @@ class SearchEngineEnv(Env):
 
         if not os.path.exists(SEARCH_ENGINE_LOCK):
             os.mknod(SEARCH_ENGINE_LOCK)
+
+        if not os.path.exists(SEARCH_ENGINE_USER_INFO):
+            os.mknod(SEARCH_ENGINE_USER_INFO)
