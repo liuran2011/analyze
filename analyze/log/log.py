@@ -13,6 +13,9 @@ class Log(object):
     def set_log_level(self,level):
         self.level=level
 
+        if self.logger:
+            self.logger.setLevel(self._get_log_level())
+
     def set_log_file(self,file):
         rotate_handler=RotatingFileHandler(file,maxBytes=10*1024*1024,backupCount=10)
         formatter=logging.Formatter('[%(asctime)s][%(filename)s:%(lineno)d][%(levelname)s][%(message)s]')

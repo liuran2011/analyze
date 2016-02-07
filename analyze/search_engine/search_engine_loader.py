@@ -12,7 +12,9 @@ class SearchEngineLoader(object):
         self._log_init(conf_file.split('.')[0])
 
         self.conf=SearchEngineConf('/'.join([self.env.conf_dir(),conf_file]))
-        
+
+        LOG.set_log_level(self.conf.log_level())
+
         module_name="search_engine.%s"%(self.conf.engine_name())
         m=importlib.import_module(module_name)
         self.engine=m.SearchEngine(self.conf,self.env)
