@@ -2,6 +2,7 @@ import urllib
 from user_info_mgr import UserInfoMgr
 import copy
 import time
+from log.log import LOG
 
 class NotImplementException(Exception):
     """Function method not implement exception."""
@@ -27,14 +28,14 @@ class SearchEngineBase(object):
             fd.close()
             return page
         except IOError as e:
-            print "open url:%s failed."%(url)
+            LOG.warn("open url:%s failed."%(url))
             return page
 
     def search_user(self,user):
         raise NotImplementException("search_user not implement")
 
     def start(self):
-        print "search engine running..."
+        LOG.info("search engine running...")
 
         while True:
             self.user_list_reload()

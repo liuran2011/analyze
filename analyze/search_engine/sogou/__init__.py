@@ -6,6 +6,7 @@ import urllib
 import copy
 from search_engine.search_engine_base import SearchEngineBase
 from html_parser import SogouHTMLParser
+from log.log import LOG
 
 class SearchEngine(SearchEngineBase):
     def __init__(self,conf,env):
@@ -18,8 +19,7 @@ class SearchEngine(SearchEngineBase):
         return self.fetch_page(search_url)
 
     def _search_one_negative_word(self,user,page,word):
-        
-        print "user:",user['username'],"neg word:",word
+        LOG.info("user: %s, neg word:%s"%(user['username'],word))
 
     def _search_negative_word(self,user,link):
         page=self.fetch_page(link) 
@@ -30,7 +30,7 @@ class SearchEngine(SearchEngineBase):
             self.html_parser.reset_parser()
             self.html_parser.feed(page)
         except:
-            print "parse link:",link,"failed."
+            LOG.warn("parse link:%s failed."%(link))
             return
 
 
@@ -75,7 +75,7 @@ class SearchEngine(SearchEngineBase):
             if not page:
                 break
 
-            print "search next page:",nextpage_url
+            LOG.debug("search next page:%s"%(nextpage_url))
 
             self.html_parser.reset_parser()
             self.html_parser.feed(page)
@@ -84,9 +84,9 @@ class SearchEngine(SearchEngineBase):
                 break
 
     def search_user(self,user):
-        print "username:",user['username']
-        print 'keyword:',user['keyword']
-        print 'negative_word:',user['negative_word']
+        LOG.info("username:%s"%(user['username']))
+        LOG.info('keyword:%s'%(user['keyword']))
+        LOG.info('negative_word:%s'%(user['negative_word']))
 
         for keyword in user['keyword']:
             self._search_keyword(user,keyword)
