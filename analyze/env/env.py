@@ -2,6 +2,15 @@ import os
 from constants import *
 
 class Env(object):
+    def basic_conf_dir(self):
+        return CONF_DIR
+    
+    def basic_conf_file(self):
+        return ANALYZE_CONF_FILE
+
+    def log_dir(self):
+        return LOG_DIR
+
     @staticmethod
     def check():
         if not os.path.exists(LOG_DIR):

@@ -10,13 +10,23 @@ from env.search_engine_env import SearchEngineEnv
 from search_engine.search_engine_loader import SearchEngineLoader
 from search_engine.user_info_export import UserInfoExport
 from log.log import LOG
+from conf.analyze_conf import AnalyzeConf
 
 class SearchEngineMonitor(object):
     def __init__(self):
         self._env_init()
         self._log_init()
+        self._conf_init()
+        self._rabbitmq_init()
         self.engine_process=[]
         self._user_info_init()
+
+    def _rabbitmq_init(self):
+        pass
+
+    def _conf_init(self):
+        conf_file="/".join([self.env.basic_conf_dir(),self.env.basic_conf_file()])
+        self.analyze_conf=AnalyzeConf(conf_file)
 
     def _env_init(self):
         self.env=SearchEngineEnv()
