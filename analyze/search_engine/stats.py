@@ -31,11 +31,14 @@ class Stats(object):
         disk_stats=[]
 
         for partition in psutil.disk_partitions():
-            disk=psutil.disk_usage(partition.mountpoint)
-            disk_stats.append({TOTAL_DISK:disk.total,
-                                USED_DISK:disk.used,
-                                FREE_DISK:disk.free,
-                                DISK_USAGE:disk.percent})
+            try:
+                disk=psutil.disk_usage(partition.mountpoint)
+                disk_stats.append({TOTAL_DISK:disk.total,
+                                    USED_DISK:disk.used,
+                                    FREE_DISK:disk.free,
+                                    DISK_USAGE:disk.percent})
+            except OSError:
+                continue
 
         return disk_stats
 

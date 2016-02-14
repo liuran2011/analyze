@@ -3,6 +3,7 @@
 from env.env import Env
 from conf.analyze_conf import AnalyzeConf
 from log.log import LOG
+from mq.mq_analyze import AnalyzeMQ
 
 class Analyze(object):
     def __init__(self):
@@ -30,10 +31,11 @@ class Analyze(object):
         LOG.set_log_level(self.conf.log_level())
 
     def _rabbitmq_init(self):
-        pass
+        self.analyze_mq=AnalyzeMQ(self.conf)
 
     def main(self):
-        pass
+        print "main"
+        self.analyze_mq.run()
 
 if __name__=="__main__":
     Analyze().main()
