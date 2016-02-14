@@ -14,13 +14,10 @@ class SearchEngineMQ(object):
                                 "topic",delivery_mode=1)
         self.stat_routing_key=".".join([self.id,SE_STATS_TOPIC_SUFFIX])
         self.connect=Connection(self.conf.rabbit_connection())
-        self.channel=self.connect.channel()
-        self.stat_producer=Producer(self.channel,
-                                self.stat_exchange)
+        self.stat_producer=self.connect.Producer(exchange=self.stat_exchange,
+                                                routing_key=self.stat_routing_key)
 
     def publish_stats(self,stat):
         msg={"id":self.id,"stats":stat}
         print "routing_key...",self.stat_routing_key
-        self.stat_producer.publish(msg,
-                                    exchange=self.stat_exchange,
-                                    routing_key=self.stat_routing_key)
+        self.stat_producer.publish(msg)

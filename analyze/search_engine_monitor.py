@@ -29,7 +29,6 @@ class SearchEngineMonitor(object):
         while True:
             stats=self.stats.get()
             self.rabbitmq.publish_stats(stats)
-            print "updating stats....",stats
             time.sleep(Stats.STATS_UPDATE_INTERVAL)
 
     def _stats_init(self):

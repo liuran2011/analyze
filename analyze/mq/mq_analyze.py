@@ -13,17 +13,14 @@ class AnalyzeMQ(object):
 
     def _stats_init(self):
         self.connect=Connection(self.conf.rabbit_connection())
-        self.channel=self.connect.channel()
         self.stats_exchange=Exchange(SE_STATS_EXCHANGE,"topic",delivery_mode=1)
         self.stats_queue=Queue(SE_STATS_QUEUE,
                             exchange=self.stats_exchange,
-                            routing_key='*.'+SE_STATS_TOPIC_SUFFIX,
-                            channel=self.channel)
-        self.stats_consumer=Consumer(self.channel,self.stats_queue)
-        self.stats_consumer.register_callback(self._stats_msg_proc)
+                            routing_key='*.'+SE_STATS_TOPIC_SUFFIX)
+        self.stats_consumer=self.connect.Consumer(self.stats_queue,callbacks=[self._stats_msg_proc])
 
     def run(self):
         while True:
             print "drain event..."
-            self.stats_consumer.consume()
-            #self.connect.drain_events()
+            #self.stats_consumer.consume()
+            self.connect.drain_events()
