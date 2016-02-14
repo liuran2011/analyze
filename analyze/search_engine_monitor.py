@@ -11,18 +11,33 @@ from search_engine.search_engine_loader import SearchEngineLoader
 from search_engine.user_info_export import UserInfoExport
 from log.log import LOG
 from conf.analyze_conf import AnalyzeConf
+from mq.mq_se import SearchEngineMQ
+from search_engine.stats import Stats
+import time
 
 class SearchEngineMonitor(object):
     def __init__(self):
         self._env_init()
         self._log_init()
         self._conf_init()
+        self._stats_init()
         self._rabbitmq_init()
         self.engine_process=[]
         self._user_info_init()
 
+    def _stats_update(self):
+        while True:
+            stats=self.stats.get()
+            self.rabbitmq.publish_stats(stats)
+            print "updating stats....",stats
+            time.sleep(Stats.STATS_UPDATE_INTERVAL)
+
+    def _stats_init(self):
+        self.stats=Stats()
+        self.stats_task=gevent.spawn(self._stats_update)
+
     def _rabbitmq_init(self):
-        pass
+        self.rabbitmq=SearchEngineMQ(self.analyze_conf)
 
     def _conf_init(self):
         conf_file="/".join([self.env.basic_conf_dir(),self.env.basic_conf_file()])
@@ -56,7 +71,8 @@ class SearchEngineMonitor(object):
             p=multiprocessing.Process(target=self._load_engine,args=(f,))
             p.start()
             self.engine_process.append(p)
-        
+            self.stats.add_engine(f)
+
         for p in self.engine_process:
             p.join()
 
