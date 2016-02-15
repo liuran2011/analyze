@@ -2,6 +2,7 @@ from kombu import Exchange,Queue,Consumer,Connection
 from constants import *
 from kombu.mixins import ConsumerMixin
 from constants import *
+from log.log import LOG
 
 class AnalyzeConsumer(ConsumerMixin):
     def __init__(self,connection,mq):
@@ -35,6 +36,11 @@ class AnalyzeMQ(object):
         self.se_mgr=se_mgr
 
         self._stats_init()
+        self._user_info_init()
+
+    def _user_info_init(self):
+        self.se_queues={}
+        self.user_info_exchange=Exchange(SE_USER_EXCHANGE,"direct",delivery_mode=1)
 
     def _stats_init(self):
         self.connect=Connection(self.conf.rabbit_connection())
@@ -44,11 +50,22 @@ class AnalyzeMQ(object):
         self.consumer.register_msg_proc(self.se_mgr.stats_update)
     
     def add_queue(self,msg):
-        print "update queue..."
+        key=msg[MESSAGE_ID]
+
+        if self.se_queues.get(key,None):
+            return
+
+        self.se_queues[key]=self.connect.Producer(exchange=self.user_info_exchange,
+                                        routing_key=key+"."+SE_USER_ROUTING_KEY_SUFFIX)
+        LOG.info("add queue %s"%(key))
 
     def del_queue(self,id):
-        print "del queue...."
-        pass
+        if not self.se_queues.get(id,None):
+            return
+
+        producer=self.se_queues.pop(id)
+        producer.close()
+        LOG.info("del queue %s"%(id))
 
     def run(self):
         self.consumer.run()

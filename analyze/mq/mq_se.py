@@ -1,15 +1,46 @@
-from kombu import Exchange,Connection,Producer
+from kombu import Queue,Exchange,Connection,Producer
 from constants import *
 import uuid
+from kombu.mixins import ConsumerMixin
+
+class SEConsumer(ConsumerMixin):
+    def __init__(self,connection,id):
+        self.connection=connection
+        self.id=id
+        self.callbacks=[]
+        self.exchange=Exchange(SE_USER_EXCHANGE,"direct",delivery_mode=1)
+        self.queue=Queue(self.id+"."+SE_USER_QUEUE_SUFFIX,
+                        exchange=self.exchange,
+                        routing_key=self.id+"."+SE_USER_ROUTING_KEY_SUFFIX)
+    
+    def get_consumers(self,Consumer,channel):
+        return [Consumer(queues=[self.queue],callbacks=[self._user_info_proc])]
+
+    def register_callbacks(self,func):
+        for f in self.callbacks:
+            if f==func:
+                break
+        else:
+            self.callbacks.append(func)
+
+    def _user_info_proc(self,body,message):
+        for func in self.callbacks:
+            func(body[MESSAGE_USER_INFO])
+
+        message.ack()
 
 class SearchEngineMQ(object):
-    def __init__(self,conf,env):
+    def __init__(self,conf,env,user_info_export):
         self.conf=conf
         self.env=env
+        self.user_info_export=user_info_export
 
         self._gen_id()
 
         self._stat_init()
+
+        self.consumer=SEConsumer(self.connect,self.id)
+        self.consumer.register_callbacks(self.user_info_export.export)
 
     def _gen_id(self):
         try:
@@ -33,3 +64,6 @@ class SearchEngineMQ(object):
     def publish_stats(self,stat):
         msg={MESSAGE_ID:self.id,MESSAGE_STATS:stat}
         self.stat_producer.publish(msg)
+
+    def run(self):
+        self.consumer.run()

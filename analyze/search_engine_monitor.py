@@ -20,10 +20,10 @@ class SearchEngineMonitor(object):
         self._env_init()
         self._log_init()
         self._conf_init()
+        self._user_info_init()
         self._rabbitmq_init()
         self._stats_init()
         self.engine_process=[]
-        self._user_info_init()
 
     def _stats_update(self):
         while True:
@@ -35,7 +35,9 @@ class SearchEngineMonitor(object):
         self.stats_task=gevent.spawn(self._stats_update)
 
     def _rabbitmq_init(self):
-        self.rabbitmq=SearchEngineMQ(self.analyze_conf,self.env)
+        self.rabbitmq=SearchEngineMQ(self.analyze_conf,
+                                    self.env,
+                                    self.user_info_export)
 
     def _conf_init(self):
         conf_file="/".join([self.env.basic_conf_dir(),self.env.basic_conf_file()])
@@ -46,9 +48,8 @@ class SearchEngineMonitor(object):
         self.env.check()
 
     def _user_info_init(self):
-        self.user_info=[{'username':'liuran','keyword':['zte'],'negative_word':['bad']}]
         self.user_info_export=UserInfoExport(self.env)
-        self.user_info_export.export(self.user_info)
+        self.user_info_export.export([])
 
     def _log_init(self):
         id='search_engine_monitor'
@@ -70,6 +71,8 @@ class SearchEngineMonitor(object):
             p.start()
             self.engine_process.append(p)
             self.stats.add_engine(f)
+
+        self.rabbitmq.run()
 
         for p in self.engine_process:
             p.join()
