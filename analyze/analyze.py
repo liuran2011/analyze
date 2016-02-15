@@ -14,7 +14,7 @@ class Analyze(object):
         self._env_init()
         self._log_init()
         self._conf_init()
-        self.se_mgr=SearchEngineMgr()
+        self.se_mgr=SearchEngineMgr(self.conf)
         self._rabbitmq_init()
 
     def _log_init(self):
@@ -37,6 +37,7 @@ class Analyze(object):
 
     def _rabbitmq_init(self):
         self.analyze_mq=AnalyzeMQ(self.conf,self.se_mgr)
+        self.se_mgr.register_notifier(self.analyze_mq.del_queue)
 
     def main(self):
         self.analyze_mq.run()

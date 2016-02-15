@@ -40,11 +40,15 @@ class AnalyzeMQ(object):
         self.connect=Connection(self.conf.rabbit_connection())
 
         self.consumer=AnalyzeConsumer(self.connect,self.se_mgr)
-        self.consumer.register_msg_proc(self.update_queue)
+        self.consumer.register_msg_proc(self.add_queue)
         self.consumer.register_msg_proc(self.se_mgr.stats_update)
     
-    def update_queue(self,msg):
+    def add_queue(self,msg):
         print "update queue..."
+
+    def del_queue(self,id):
+        print "del queue...."
+        pass
 
     def run(self):
         self.consumer.run()
