@@ -20,15 +20,14 @@ class SearchEngineMonitor(object):
         self._env_init()
         self._log_init()
         self._conf_init()
-        self._stats_init()
         self._rabbitmq_init()
+        self._stats_init()
         self.engine_process=[]
         self._user_info_init()
 
     def _stats_update(self):
         while True:
-            stats=self.stats.get()
-            self.rabbitmq.publish_stats(stats)
+            self.rabbitmq.publish_stats(self.stats.get())
             time.sleep(Stats.STATS_UPDATE_INTERVAL)
 
     def _stats_init(self):
@@ -36,7 +35,7 @@ class SearchEngineMonitor(object):
         self.stats_task=gevent.spawn(self._stats_update)
 
     def _rabbitmq_init(self):
-        self.rabbitmq=SearchEngineMQ(self.analyze_conf)
+        self.rabbitmq=SearchEngineMQ(self.analyze_conf,self.env)
 
     def _conf_init(self):
         conf_file="/".join([self.env.basic_conf_dir(),self.env.basic_conf_file()])

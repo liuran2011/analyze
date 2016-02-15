@@ -3,12 +3,25 @@ from constants import *
 import uuid
 
 class SearchEngineMQ(object):
-    def __init__(self,conf):
+    def __init__(self,conf,env):
         self.conf=conf
-        self.id=str(uuid.uuid1())
+        self.env=env
+
+        self._gen_id()
 
         self._stat_init()
 
+    def _gen_id(self):
+        try:
+            f=open(self.env.uuid_file())
+            self.id=f.read()
+            f.close()
+        except IOError:
+            self.id=str(uuid.uuid1())
+            f=open(self.env.uuid_file(),"w")
+            f.write(self.id)
+            f.close()
+            
     def _stat_init(self):
         self.stat_exchange=Exchange(SE_STATS_EXCHANGE,
                                 "topic",delivery_mode=1)
@@ -18,6 +31,5 @@ class SearchEngineMQ(object):
                                                 routing_key=self.stat_routing_key)
 
     def publish_stats(self,stat):
-        msg={"id":self.id,"stats":stat}
-        print "routing_key...",self.stat_routing_key
+        msg={MESSAGE_ID:self.id,MESSAGE_STATS:stat}
         self.stat_producer.publish(msg)

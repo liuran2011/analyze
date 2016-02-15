@@ -18,6 +18,12 @@ class SearchEngineEnv(Env):
     def user_info_file(self):
         return SEARCH_ENGINE_USER_INFO
 
+    def lib_dir(self):
+        return SEARCH_ENGINE_LIB_DIR
+
+    def uuid_file(self):
+        return SEARCH_ENGINE_UUID_FILE
+
     @staticmethod
     def check():
         Env.check()
@@ -33,3 +39,6 @@ class SearchEngineEnv(Env):
 
         if not os.path.exists(SEARCH_ENGINE_USER_INFO):
             os.mknod(SEARCH_ENGINE_USER_INFO)
+
+        if not os.path.exists(SEARCH_ENGINE_LIB_DIR):
+            os.makedirs(SEARCH_ENGINE_LIB_DIR)

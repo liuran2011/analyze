@@ -1,5 +1,6 @@
 import psutil
 from constants import *
+import copy
 
 class Stats(object):
     STATS_UPDATE_INTERVAL=5
@@ -48,7 +49,7 @@ class Stats(object):
         stats[CPU_STATS]=self._get_cpu_stats()
         stats[MEMORY_STATS]=self._get_mem_stats()
         stats[DISK_STATS]=self._get_disk_stats()
-        stats[ENGINE_STATS]=self.engine_stats
+        stats[ENGINE_STATS]=copy.deepcopy(self.engine_stats)
 
         return stats
 
@@ -58,4 +59,3 @@ class Stats(object):
                 return
 
         self.engine_stats.append({ENGINE_NAME:engine,ENGINE_STAT:ENGINE_STAT_RUNNING})
-

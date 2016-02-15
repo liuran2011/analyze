@@ -5,6 +5,7 @@ SEARCH_INTERVAL="interval"
 URL="url"
 ENABLE="enable"
 ENGINE_NAME="engine_name"
+SEARCH_ENGINE_DOWN_TIME="search_engine_down_time"
 
 #database section
 DATABASE="database"

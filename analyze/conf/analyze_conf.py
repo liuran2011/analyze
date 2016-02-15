@@ -8,6 +8,9 @@ class AnalyzeConf(BasicConf):
     def db_connection(self):
         return self.parser.get(DATABASE,CONNECTION)
 
+    def search_engine_down_time(self):
+        return self.parser.get(DEFAULT,SEARCH_ENGINE_DOWN_TIME)
+
     def rabbit_connection(self):
         host=self.parser.get(RABBITMQ,HOST)
         if not host:

@@ -1,17 +1,22 @@
 #! /usr/bin/env python
 
+import gevent.monkey
+gevent.monkey.patch_all()
+
 from env.env import Env
 from conf.analyze_conf import AnalyzeConf
 from log.log import LOG
 from mq.mq_analyze import AnalyzeMQ
+from search_engine.search_engine_mgr import SearchEngineMgr
 
 class Analyze(object):
     def __init__(self):
         self._env_init()
         self._log_init()
         self._conf_init()
+        self.se_mgr=SearchEngineMgr()
         self._rabbitmq_init()
-    
+
     def _log_init(self):
         id="analyze"
         LOG.set_log_id(id)
@@ -31,10 +36,9 @@ class Analyze(object):
         LOG.set_log_level(self.conf.log_level())
 
     def _rabbitmq_init(self):
-        self.analyze_mq=AnalyzeMQ(self.conf)
+        self.analyze_mq=AnalyzeMQ(self.conf,self.se_mgr)
 
     def main(self):
-        print "main"
         self.analyze_mq.run()
 
 if __name__=="__main__":
