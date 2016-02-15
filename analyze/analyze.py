@@ -7,7 +7,7 @@ from env.env import Env
 from conf.analyze_conf import AnalyzeConf
 from log.log import LOG
 from mq.mq_analyze import AnalyzeMQ
-from search_engine.search_engine_mgr import SearchEngineMgr
+from analyze.search_engine_mgr import SearchEngineMgr
 
 class Analyze(object):
     def __init__(self):
