@@ -31,5 +31,12 @@ class Result(Base):
 class NegativeWord(Base):
     __tablename__="negative_word"
 
+    id=Column(Integer,primary_key=True)
     word=Column(String(NEGATIVE_WORD_LEN),nullable=False)
+
+class GlobalSetting(Base):
+    __tablename__="global_setting"
+
+    id=Column(Integer,primary_key=True)
+    email=Column(String(EMAIL_LEN))
 

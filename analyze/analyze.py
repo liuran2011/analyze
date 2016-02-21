@@ -8,14 +8,19 @@ from conf.analyze_conf import AnalyzeConf
 from log.log import LOG
 from mq.mq_analyze import AnalyzeMQ
 from analyze.search_engine_mgr import SearchEngineMgr
+from db.analyze_db import AnalyzeDB
 
 class Analyze(object):
     def __init__(self):
         self._env_init()
         self._log_init()
         self._conf_init()
+        self._db_init()
         self.se_mgr=SearchEngineMgr(self.conf)
         self._rabbitmq_init()
+
+    def _db_init(self):
+        self.db=AnalyzeDB(self.conf)
 
     def _log_init(self):
         id="analyze"
