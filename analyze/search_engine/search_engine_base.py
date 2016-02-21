@@ -3,6 +3,7 @@ from user_info_mgr import UserInfoMgr
 import copy
 import time
 from log.log import LOG
+import importlib
 
 class NotImplementException(Exception):
     """Function method not implement exception."""
@@ -10,12 +11,18 @@ class NotImplementException(Exception):
 class SearchEngineBase(object):
     USER_LIST_EMPTY_RESCHED_INTERVAL=5
 
-    def __init__(self,conf,env):
+    def __init__(self,conf,env,db):
         self.conf=conf
         self.max_page=100
         self.env=env
+        self.db=db
         self.user_info_mgr=UserInfoMgr(env)
         self.user_list=[]
+        self._algorithm_init()
+
+    def _algorithm_init(self):
+        module_name="algorithm.%s"%(self.conf.algorithm())
+        self.algorithm=importlib.import_module(module_name)
 
     def user_list_reload(self):
         self.user_list=copy.deepcopy(self.user_info_mgr.user_info())

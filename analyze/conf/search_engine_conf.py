@@ -19,3 +19,6 @@ class SearchEngineConf(BasicConf):
 
     def engine_name(self):
         return self.parser.get(DEFAULT,ENGINE_NAME)
+
+    def algorithm(self):
+        return self.parser.get(DEFAULT,ALGORITHM)

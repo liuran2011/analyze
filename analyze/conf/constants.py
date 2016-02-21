@@ -6,6 +6,7 @@ URL="url"
 ENABLE="enable"
 ENGINE_NAME="engine_name"
 SEARCH_ENGINE_DOWN_TIME="search_engine_down_time"
+ALGORITHM="algorithm"
 
 #database section
 DATABASE="database"

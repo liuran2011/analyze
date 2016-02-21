@@ -9,8 +9,8 @@ from html_parser import SogouHTMLParser
 from log.log import LOG
 
 class SearchEngine(SearchEngineBase):
-    def __init__(self,conf,env):
-        super(SearchEngine,self).__init__(conf,env)
+    def __init__(self,conf,env,db):
+        super(SearchEngine,self).__init__(conf,env,db)
         self.html_parser=SogouHTMLParser()
         self.page_count=0
 
@@ -18,8 +18,10 @@ class SearchEngine(SearchEngineBase):
         search_url=self.conf.url()+"/web?query="+search_keyword+"&_asf=www.sogou.com&_ast=&w=01019900&p=40040100&ie=utf8&sut=7403&sst0=1451221676273&lkt=0%2C0%2C0"
         return self.fetch_page(search_url)
 
-    def _search_one_negative_word(self,user,page,word):
-        LOG.info("user: %s, neg word:%s"%(user['username'],word))
+    def _search_one_negative_word(self,user,page,word,url):
+        if self.algorithm.match(word,page):
+            LOG.info("find match: user: %s url:%s word:%s"%(user,url,word))
+            self.db.add_result(user,url,self.conf.url())
 
     def _search_negative_word(self,user,link):
         page=self.fetch_page(link) 
@@ -33,13 +35,13 @@ class SearchEngine(SearchEngineBase):
             LOG.warn("parse link:%s failed."%(link))
             return
 
-
+        url=link
         if self.html_parser.redirect_url:
             page=self.fetch_page(self.html_parser.redirect_url)
-
+            url=self.html_parser.redirect_url
+    
         for negative_word in user['negative_word']:
-            self._search_one_negative_word(user,page,negative_word)
-
+            self._search_one_negative_word(user,page,negative_word,url)
 
     def _search_keyword(self,user,keyword):
         abs_page=self._first_abs_page(keyword)

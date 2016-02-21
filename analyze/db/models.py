@@ -1,5 +1,5 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column,Integer,ForeignKey,String
+from sqlalchemy import Column,Integer,DateTime,ForeignKey,String
 from sqlalchemy.orm import relationship
 
 from constants import *
@@ -25,6 +25,7 @@ class Result(Base):
     user_id=Column(Integer,ForeignKey('user.id'))
     url=Column(String(URL_LEN),nullable=False)
     source_url=Column(String(URL_LEN))
+    datetime=Column(DateTime)
 
     user=relationship(User)
 
