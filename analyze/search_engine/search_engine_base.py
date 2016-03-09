@@ -22,7 +22,8 @@ class SearchEngineBase(object):
 
     def _algorithm_init(self):
         module_name="algorithm.%s"%(self.conf.algorithm())
-        self.algorithm=importlib.import_module(module_name)
+        m=importlib.import_module(module_name)
+        self.algorithm=m.Algorithm()
 
     def user_list_reload(self):
         self.user_list=copy.deepcopy(self.user_info_mgr.user_info())

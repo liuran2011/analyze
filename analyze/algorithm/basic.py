@@ -1,8 +1,7 @@
 from base import BaseAlgorithm
 
-class BasicAlgorithm(BaseAlgorithm):
+class Algorithm(BaseAlgorithm):
     def match(self,keyword,content):
-        print "match......."
         if content.find(keyword)==-1:
             return False
 

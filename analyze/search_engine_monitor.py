@@ -49,7 +49,7 @@ class SearchEngineMonitor(object):
 
     def _user_info_init(self):
         self.user_info_export=UserInfoExport(self.env)
-        self.user_info_export.export([])
+        #self.user_info_export.export([])
 
     def _log_init(self):
         id='search_engine_monitor'

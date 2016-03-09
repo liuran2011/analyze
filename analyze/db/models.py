@@ -9,7 +9,7 @@ Base=declarative_base()
 class User(Base):
     __tablename__="user"
 
-    id=Column(Integer,primary_key=True)
+    id=Column(Integer,primary_key=True,autoincrement=True)
     name=Column(String(USER_NAME_LEN),nullable=False)
     email=Column(String(EMAIL_LEN))
     mobile_phone=Column(String(MOBILE_PHONE_LEN))
@@ -21,7 +21,7 @@ class User(Base):
 class Result(Base):
     __tablename__="result"
 
-    id=Column(Integer,primary_key=True)
+    id=Column(Integer,primary_key=True,autoincrement=True)
     user_id=Column(Integer,ForeignKey('user.id'))
     url=Column(String(URL_LEN),nullable=False)
     source_url=Column(String(URL_LEN))
