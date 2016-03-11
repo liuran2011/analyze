@@ -13,12 +13,12 @@ class SearchEngineDB(object):
         Base.metadata.bind=self.engine
         Base.metadata.create_all()
 
-    def add_result(self,user_name,url,source_url):
+    def add_result(self,user_name,url,source_url,keyword):
         user_id=self.session.query(User.id).filter_by(name=user_name).first()
         if not user_id:
             LOG.error("user_name: %s not found in db"%(user_name))
             return
 
-        self.session.add(Result(user_id=user_id.id,url=url,source_url=source_url))
+        self.session.add(Result(user_id=user_id.id,url=url,source_url=source_url,keyword=keyword))
         self.session.commit()
 

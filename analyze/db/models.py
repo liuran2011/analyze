@@ -26,6 +26,7 @@ class Result(Base):
     url=Column(String(URL_LEN),nullable=False)
     source_url=Column(String(URL_LEN))
     datetime=Column(DateTime)
+    keyword=Column(String(KEYWORD_LEN))
 
     user=relationship(User)
 
