@@ -21,7 +21,7 @@ class SearchEngine(SearchEngineBase):
     def _search_one_negative_word(self,user,page,word,url):
         if self.algorithm.match(word,page):
             LOG.info("find match: user: %s url:%s word:%s"%(user,url,word))
-            self.db.add_result(user,url,self.conf.url())
+            self.db.add_result(user['username'],url,self.conf.url())
 
     def _search_negative_word(self,user,link):
         page=self.fetch_page(link) 

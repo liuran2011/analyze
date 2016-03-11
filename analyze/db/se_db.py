@@ -19,6 +19,6 @@ class SearchEngineDB(object):
             LOG.error("user_name: %s not found in db"%(user_name))
             return
 
-        self.session.add(Result(user_id=user_id,url=url,source_url=source_url))
+        self.session.add(Result(user_id=user_id.id,url=url,source_url=source_url))
         self.session.commit()
 
