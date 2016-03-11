@@ -7,6 +7,8 @@ ENABLE="enable"
 ENGINE_NAME="engine_name"
 SEARCH_ENGINE_DOWN_TIME="search_engine_down_time"
 ALGORITHM="algorithm"
+INTERVAL="interval"
+FORMAT="format"
 
 #database section
 DATABASE="database"
@@ -23,4 +25,5 @@ RABBITMQ_DEFAULT_HOST="localhost"
 RABBITMQ_DEFAULT_PORT=5672
 RABBITMQ_DEFAULT_USERNAME="guest"
 RABBITMQ_DEFAULT_PASSWORD="guest"
+
 
