@@ -2,6 +2,7 @@ from models import *
 from sqlalchemy.engine import create_engine
 from sqlalchemy.orm import sessionmaker
 from log.log import LOG
+import datetime
 
 class SearchEngineDB(object):
     def __init__(self,conf):
@@ -19,6 +20,8 @@ class SearchEngineDB(object):
             LOG.error("user_name: %s not found in db"%(user_name))
             return
 
-        self.session.add(Result(user_id=user_id.id,url=url,source_url=source_url,keyword=keyword))
+        self.session.add(Result(user_id=user_id.id,url=url,
+                            source_url=source_url,keyword=keyword,
+                            datetime=datetime.datetime.now()))
         self.session.commit()
 

@@ -17,6 +17,7 @@ class User(Base):
     password=Column(String(PASSWORD_LEN),nullable=False)
     company=Column(String(COMPANY_LEN))
     monitor_keyword=Column(String(MONITOR_KEYWORD_LEN))
+    last_report_time=Column(DateTime)
 
 class Result(Base):
     __tablename__="result"
