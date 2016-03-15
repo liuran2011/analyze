@@ -14,3 +14,5 @@ SEARCH_ENGINE_USER_INFO='/'.join([SEARCH_ENGINE_RUN_DIR,"user_info"])
 SEARCH_ENGINE_UUID_FILE='/'.join([SEARCH_ENGINE_LIB_DIR,"uuid"])
 
 REPORT_CONF_FILE='report_gen.conf'
+REPORT="report"
+REPORT_RUN_DIR='/'.join([RUN_DIR,REPORT])

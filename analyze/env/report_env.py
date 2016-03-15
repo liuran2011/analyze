@@ -12,7 +12,12 @@ class ReportEnv(Env):
     def conf_file(self):
         return REPORT_CONF_FILE
 
+    def run_dir(self):
+        return REPORT_RUN_DIR
+
     @staticmethod
     def check():
         Env.check()
-
+        
+        if not os.path.exists(REPORT_RUN_DIR):
+            os.makedirs(REPORT_RUN_DIR)

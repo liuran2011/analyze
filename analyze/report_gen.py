@@ -40,7 +40,7 @@ class ReportGenerator(object):
 
     def main(self):
         module=importlib.import_module("report.%s"%(self.conf.format()))
-        self.engine=module.Generator(self.conf,self.db)
+        self.engine=module.Generator(self.conf,self.env,self.db)
         self.engine.run()
 
 if __name__=="__main__":
