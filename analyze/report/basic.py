@@ -15,7 +15,6 @@ class BasicGenerator(object):
         for result in result_list:
             self.add(result)
         self.finish(username)
-        self.db.reset_last_time(userid)
 
     def run(self):
         while True:
