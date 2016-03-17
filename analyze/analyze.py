@@ -2,6 +2,7 @@
 
 import gevent.monkey
 gevent.monkey.patch_all()
+import gevent
 
 from env.env import Env
 from conf.analyze_conf import AnalyzeConf
@@ -9,6 +10,7 @@ from log.log import LOG
 from mq.mq_analyze import AnalyzeMQ
 from analyze.search_engine_mgr import SearchEngineMgr
 from db.analyze_db import AnalyzeDB
+from analyze.rest_server import RestServer
 
 class Analyze(object):
     def __init__(self):
@@ -18,6 +20,7 @@ class Analyze(object):
         self._db_init()
         self.se_mgr=SearchEngineMgr(self.conf)
         self._rabbitmq_init()
+        self.rest_server=RestServer(self.conf)
 
     def _db_init(self):
         self.db=AnalyzeDB(self.conf)
@@ -45,7 +48,10 @@ class Analyze(object):
         self.se_mgr.register_notifier(self.analyze_mq.del_queue)
 
     def main(self):
-        self.analyze_mq.run()
+        mq_task=gevent.spawn(self.analyze_mq.run)
+        rest_task=gevent.spawn(self.rest_server.run)
+
+        gevent.wait([mq_task,rest_task])
 
 if __name__=="__main__":
     Analyze().main()

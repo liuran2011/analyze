@@ -5,6 +5,12 @@ class AnalyzeConf(BasicConf):
     def __init__(self,conf_file):
         super(AnalyzeConf,self).__init__(conf_file)
 
+    def rest_server_address(self):
+        return self.parser.get(REST,REST_SERVER_ADDRESS)
+
+    def rest_server_port(self):
+        return int(self.parser.get(REST,REST_SERVER_PORT))
+
     def db_connection(self):
         return self.parser.get(DATABASE,CONNECTION)
 

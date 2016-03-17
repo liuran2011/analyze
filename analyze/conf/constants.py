@@ -26,4 +26,7 @@ RABBITMQ_DEFAULT_PORT=5672
 RABBITMQ_DEFAULT_USERNAME="guest"
 RABBITMQ_DEFAULT_PASSWORD="guest"
 
-
+#rest section
+REST="rest"
+REST_SERVER_ADDRESS='rest_server_address'
+REST_SERVER_PORT='rest_server_port'
