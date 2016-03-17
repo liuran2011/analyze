@@ -40,6 +40,6 @@ class NegativeWord(Base):
 class GlobalSetting(Base):
     __tablename__="global_setting"
 
-    id=Column(Integer,primary_key=True)
+    id=Column(Integer,primary_key=True,autoincrement=True)
     email=Column(String(EMAIL_LEN))
 

@@ -12,6 +12,9 @@ class RestServer(object):
     USER_MONITOR_KEYWORD="monitor_keyword"
     USER_LAST_REPORT_TIME="last_report_time"
 
+    GLB_SETTING='global_setting'
+    GLB_SETTING_EMAIL='email'
+
     def __init__(self,conf,db):
         self.conf=conf
         self.db=db
@@ -51,7 +54,7 @@ class RestServer(object):
 
     def _get_user(self):
         result=[]
-        for user in self.db.user_list():
+        for user in self.db.user_list() or []:
             result.append({self.USER_NAME:user[0],
                             self.USER_EMAIL:user[1],
                             self.USER_MOBILE_PHONE:user[2],
@@ -68,7 +71,12 @@ class RestServer(object):
         pass
 
     def _global_setting_get(self):
-        pass
+        result={}
+        glb_setting=self.db.global_setting()
+        if glb_setting:
+            result[self.GLB_SETTING_EMAIL]=glb_setting[0]
+
+        return jsonify(result),HTTP_OK
 
     def run(self):
         LOG.info('rest server run at %s:%d'%(self.conf.rest_server_address(),
