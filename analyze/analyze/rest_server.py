@@ -1,9 +1,20 @@
 from flask import *
 from log.log import LOG
+from http_codes import *
 
 class RestServer(object):
-    def __init__(self,conf):
+    USER_LIST="user_list"
+    USER_NAME="name"
+    USER_EMAIL="email"
+    USER_MOBILE_PHONE="mobile_phone"
+    USER_PERMISSION="permission"
+    USER_COMPANY="company"
+    USER_MONITOR_KEYWORD="monitor_keyword"
+    USER_LAST_REPORT_TIME="last_report_time"
+
+    def __init__(self,conf,db):
         self.conf=conf
+        self.db=db
 
         self.app=Flask(__name__)
         self.app.add_url_rule('/gloal_setting',
@@ -39,7 +50,16 @@ class RestServer(object):
         pass
 
     def _get_user(self):
-        pass
+        result=[]
+        for user in self.db.user_list():
+            result.append({self.USER_NAME:user[0],
+                            self.USER_EMAIL:user[1],
+                            self.USER_MOBILE_PHONE:user[2],
+                            self.USER_PERMISSION:user[3],
+                            self.USER_COMPANY:user[4],
+                            self.USER_MONITOR_KEYWORD:user[5],
+                            self.USER_LAST_REPORT_TIME:user[6]})
+        return jsonify({self.USER_LIST:result}),HTTP_OK
 
     def _del_user(self,username):
         pass

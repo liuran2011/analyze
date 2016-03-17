@@ -14,4 +14,7 @@ class AnalyzeDB(object):
         Base.metadata.bind=self.engine
         Base.metadata.create_all()
 
-
+    def user_list(self):
+        return self.session.query(User.name,User.email,User.mobile_phone,
+                            User.permission,User.company,User.monitor_keyword,
+                            User.last_report_time).all()
