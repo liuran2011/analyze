@@ -33,7 +33,7 @@ class RestServer(object):
                             methods=['POST'])
         self.app.add_url_rule('/user','get_user',self._get_user,
                             methods=['GET'])
-        self.app.add_url_rule('/user/<string:location>',
+        self.app.add_url_rule('/user/<string:username>',
                                 'del_user',self._del_user,
                                 methods=['DELETE'])
         self.app.add_url_rule('/user/<string:location>',
@@ -49,8 +49,30 @@ class RestServer(object):
     def _modify_user(self,user,request):
         pass
 
-    def _add_user(self,user):
-        pass
+    def _add_user(self):
+        """
+        if (not request.get(self.USER_NAME,None) 
+            or not request.get(self.USER_EMAIL,None) 
+            or not request.get(self.USER_MOBILE_PHONE,None)
+            or not request.get(self.USER_COMPANY,None)
+            or not request.get(self.USER_MONITOR_KEYWORD,None)):
+            LOG.error('bad request user: %s'%(request))
+            return HTTP_BAD_REQUEST_STR,HTTP_BAD_REQUEST
+        """
+        print request
+
+        if (len(request[self.USER_NAME])==0 
+            or len(request[self.USER_EMAIL])==0
+            or len(request[self.USER_MONITOR_KEYWORD])==0
+            or len(request[self.USER_PERMISSION])==0):
+            LOG.error('bad request user:%s'%(request))
+            return HTTP_BAD_REQUEST_STR,HTTP_BAD_REQUEST
+
+        self.db.user_add(request[self.USER_NAME],request[self.USER_EMAIL],
+                        request[self.USER_MOBILE_PHONE],request[self.USER_PERMISSION],
+                        request[self.USER_COMPANY],request[self.USER_MONITOR_KEYWORD])
+        
+        return HTTP_OK_STR,HTTP_OK
 
     def _get_user(self):
         result=[]
@@ -65,7 +87,9 @@ class RestServer(object):
         return jsonify({self.USER_LIST:result}),HTTP_OK
 
     def _del_user(self,username):
-        pass
+        self.db.user_del(username)
+        
+        return HTTP_OK_STR,HTTP_OK
 
     def _global_setting_set(self,request):
         pass
