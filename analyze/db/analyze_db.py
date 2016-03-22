@@ -23,13 +23,14 @@ class AnalyzeDB(object):
                             User.permission,User.company,User.monitor_keyword,
                             User.last_report_time).all()
 
-    def user_add(self,username,email,mobile_phone,permission,company,monitor_keyword):
+    def user_add(self,username,password,email,
+                mobile_phone,permission,company,monitor_keyword):
         user_id=self.session.query(User.id).filter_by(name=username).first()
         if user_id:
             LOG.error("user %s already exist."%(username))
             return False
 
-        self.session.add(User(name=username,email=email,mobile_phone=mobile_phone,
+        self.session.add(User(name=username,password=password,email=email,mobile_phone=mobile_phone,
                             permission=permission,company=company,
                             monitor_keyword=monitor_keyword))
         self.session.commit()

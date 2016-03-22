@@ -5,6 +5,7 @@ from http_codes import *
 class RestServer(object):
     USER_LIST="user_list"
     USER_NAME="name"
+    USER_PASSWORD="password"
     USER_EMAIL="email"
     USER_MOBILE_PHONE="mobile_phone"
     USER_PERMISSION="permission"
@@ -49,28 +50,37 @@ class RestServer(object):
     def _modify_user(self,user,request):
         pass
 
+    def _add_user_check(self,req):
+        if not req:
+            return HTTP_BAD_REQUEST_STR,HTTP_BAD_REQUEST
+        
+        if (not req.get(self.USER_NAME,None) 
+            or not req.get(self.USER_PASSWORD,None)
+            or not req.get(self.USER_EMAIL,None) 
+            or not req.get(self.USER_MOBILE_PHONE,None)
+            or not req.get(self.USER_COMPANY,None)
+            or not req.get(self.USER_PERMISSION,None)
+            or not req.get(self.USER_MONITOR_KEYWORD,None)):
+            return HTTP_BAD_REQUEST_STR,HTTP_BAD_REQUEST
+        
+        if (len(req[self.USER_NAME])==0
+            or len(req[self.USER_PASSWORD])==0
+            or len(req[self.USER_EMAIL])==0
+            or len(req[self.USER_MONITOR_KEYWORD])==0
+            or len(req[self.USER_PERMISSION])==0):
+            return HTTP_BAD_REQUEST_STR,HTTP_BAD_REQUEST
+        
+        return HTTP_OK_STR,HTTP_OK
+
     def _add_user(self):
-        """
-        if (not request.get(self.USER_NAME,None) 
-            or not request.get(self.USER_EMAIL,None) 
-            or not request.get(self.USER_MOBILE_PHONE,None)
-            or not request.get(self.USER_COMPANY,None)
-            or not request.get(self.USER_MONITOR_KEYWORD,None)):
-            LOG.error('bad request user: %s'%(request))
-            return HTTP_BAD_REQUEST_STR,HTTP_BAD_REQUEST
-        """
-        print request
+        req=request.json
+        ret_str,ret=self._add_user_check(req)
+        if ret!=HTTP_OK:
+            return ret_str,ret
 
-        if (len(request[self.USER_NAME])==0 
-            or len(request[self.USER_EMAIL])==0
-            or len(request[self.USER_MONITOR_KEYWORD])==0
-            or len(request[self.USER_PERMISSION])==0):
-            LOG.error('bad request user:%s'%(request))
-            return HTTP_BAD_REQUEST_STR,HTTP_BAD_REQUEST
-
-        self.db.user_add(request[self.USER_NAME],request[self.USER_EMAIL],
-                        request[self.USER_MOBILE_PHONE],request[self.USER_PERMISSION],
-                        request[self.USER_COMPANY],request[self.USER_MONITOR_KEYWORD])
+        self.db.user_add(req[self.USER_NAME],req[self.USER_PASSWORD],req[self.USER_EMAIL],
+                        req[self.USER_MOBILE_PHONE],req[self.USER_PERMISSION],
+                        req[self.USER_COMPANY],req[self.USER_MONITOR_KEYWORD])
         
         return HTTP_OK_STR,HTTP_OK
 
