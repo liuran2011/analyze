@@ -37,7 +37,7 @@ class RestServer(object):
         self.app.add_url_rule('/user/<string:username>',
                                 'del_user',self._del_user,
                                 methods=['DELETE'])
-        self.app.add_url_rule('/user/<string:location>',
+        self.app.add_url_rule('/user/<string:username>',
                                 'modify_user',self._modify_user,
                                 methods=['PUT'])
 
@@ -47,10 +47,23 @@ class RestServer(object):
     def _token_get(self):
         pass
 
-    def _modify_user(self,user,request):
-        pass
+    def _modify_user(self,username):
+        req=request.json
+        ret_str,ret=self._user_check(req)
+        if ret!=HTTP_OK:
+            return ret_str,ret
 
-    def _add_user_check(self,req):
+        self.db.user_update(username,
+                            req[self.USER_PASSWORD],
+                            req[self.USER_EMAIL],
+                            req[self.USER_MOBILE_PHONE],
+                            req[self.USER_PERMISSION],
+                            req[self.USER_COMPANY],
+                            req[self.USER_MONITOR_KEYWORD])
+
+        return HTTP_OK_STR,HTTP_OK
+        
+    def _user_check(self,req):
         if not req:
             return HTTP_BAD_REQUEST_STR,HTTP_BAD_REQUEST
         
@@ -74,7 +87,7 @@ class RestServer(object):
 
     def _add_user(self):
         req=request.json
-        ret_str,ret=self._add_user_check(req)
+        ret_str,ret=self._user_check(req)
         if ret!=HTTP_OK:
             return ret_str,ret
 

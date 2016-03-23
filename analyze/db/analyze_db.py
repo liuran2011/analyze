@@ -23,6 +23,22 @@ class AnalyzeDB(object):
                             User.permission,User.company,User.monitor_keyword,
                             User.last_report_time).all()
 
+    def user_update(self,username,password,email,mobile_phone,permission,company,monitor_keyword):
+        user=self.session.query(User).filter_by(name=username).first()
+        if not user:
+            LOG.error("user %s not exist"%(username))
+            return False
+
+        user.password=password
+        user.email=email
+        user.mobile_phone=mobile_phone
+        user.permission=permission
+        user.company=company
+        user.monitor_keyword=monitor_keyword
+        self.session.commit()
+        
+        return True
+
     def user_add(self,username,password,email,
                 mobile_phone,permission,company,monitor_keyword):
         user_id=self.session.query(User.id).filter_by(name=username).first()
