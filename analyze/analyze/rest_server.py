@@ -114,8 +114,19 @@ class RestServer(object):
         
         return HTTP_OK_STR,HTTP_OK
 
-    def _global_setting_set(self,request):
-        pass
+    def _global_setting_check(self,req):
+        if not req:
+            return HTTP_BAD_REQUEST_STR,HTTP_BAD_REQUEST
+
+        return HTTP_OK_STR,HTTP_OK
+
+    def _global_setting_set(self):
+        req=request.json
+        ret_str,ret=self._global_setting_check(req)
+        if ret!=HTTP_OK:
+            return ret_str,ret
+
+        return HTTP_OK_STR,HTTP_OK
 
     def _global_setting_get(self):
         result={}
