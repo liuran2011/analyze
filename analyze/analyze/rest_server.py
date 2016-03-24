@@ -15,20 +15,20 @@ class RestServer(object):
 
     GLB_SETTING='global_setting'
     GLB_SETTING_EMAIL='email'
+    GLB_SETTING_SMTP_SERVER='smtp_server'
+    GLB_SETTING_SMTP_PORT='smtp_port'
+    GLB_SETTING_SMTP_USERNAME='smtp_username'
+    GLB_SETTING_SMTP_PASSWORD='smtp_password'
 
     def __init__(self,conf,db):
         self.conf=conf
         self.db=db
 
         self.app=Flask(__name__)
-        self.app.add_url_rule('/gloal_setting',
-                                'set_global_setting',
-                                self._global_setting_set,
-                                methods=['POST'])
         self.app.add_url_rule('/global_setting',
-                                'get_global_setting',
-                                self._global_setting_get,
-                                methods=['GET'])
+                                'set_global_setting',
+                                self._global_setting,
+                                methods=['POST','GET'])
 
         self.app.add_url_rule('/user','add_user',self._add_user,
                             methods=['POST'])
@@ -115,9 +115,24 @@ class RestServer(object):
         return HTTP_OK_STR,HTTP_OK
 
     def _global_setting_check(self,req):
+        print req
         if not req:
             return HTTP_BAD_REQUEST_STR,HTTP_BAD_REQUEST
 
+        if ( not req.get(self.GLB_SETTING_EMAIL,None)
+            or not req.get(self.GLB_SETTING_SMTP_SERVER,None)
+            or not req.get(self.GLB_SETTING_SMTP_PORT,None)
+            or not req.get(self.GLB_SETTING_SMTP_USERNAME,None)
+            or not req.get(self.GLB_SETTING_SMTP_PASSWORD,None)):
+            return HTTP_BAD_REQUEST_STR,HTTP_BAD_REQUEST
+        print "abc"
+        if (len(req[self.GLB_SETTING_EMAIL])==0
+            or len(req[self.GLB_SETTING_SMTP_SERVER])==0
+            or len(req[self.GLB_SETTING_SMTP_USERNAME])==0
+            or len(req[self.GLB_SETTING_SMTP_PORT])==0
+            or len(req[self.GLB_SETTING_SMTP_PASSWORD])==0):
+            return HTTP_BAD_REQUEST_STR,HTTP_BAD_REQUEST
+        print "def"
         return HTTP_OK_STR,HTTP_OK
 
     def _global_setting_set(self):
@@ -126,6 +141,12 @@ class RestServer(object):
         if ret!=HTTP_OK:
             return ret_str,ret
 
+        self.db.global_setting_update(req[self.GLB_SETTING_EMAIL],
+                            req[self.GLB_SETTING_SMTP_SERVER],
+                            req[self.GLB_SETTING_SMTP_PORT],
+                            req[self.GLB_SETTING_SMTP_USERNAME],
+                            req[self.GLB_SETTING_SMTP_PASSWORD])
+
         return HTTP_OK_STR,HTTP_OK
 
     def _global_setting_get(self):
@@ -133,8 +154,18 @@ class RestServer(object):
         glb_setting=self.db.global_setting()
         if glb_setting:
             result[self.GLB_SETTING_EMAIL]=glb_setting[0]
+            result[self.GLB_SETTING_SMTP_SERVER]=glb_setting[1]
+            result[self.GLB_SETTING_SMTP_PORT]=glb_setting[2]
+            result[self.GLB_SETTING_SMTP_USERNAME]=glb_setting[3]
+            result[self.GLB_SETTING_SMTP_PASSWORD]=glb_setting[4]
 
         return jsonify(result),HTTP_OK
+
+    def _global_setting(self):
+        if request.method=='GET':
+            return self._global_setting_get()
+        else:
+            return self._global_setting_set()
 
     def run(self):
         LOG.info('rest server run at %s:%d'%(self.conf.rest_server_address(),

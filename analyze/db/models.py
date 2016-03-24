@@ -42,4 +42,7 @@ class GlobalSetting(Base):
 
     id=Column(Integer,primary_key=True,autoincrement=True)
     email=Column(String(EMAIL_LEN))
-
+    smtp_server=Column(String(SMTP_SERVER_LEN))
+    smtp_port=Column(Integer)
+    smtp_username=Column(String(USER_NAME_LEN))
+    smtp_password=Column(String(PASSWORD_LEN))

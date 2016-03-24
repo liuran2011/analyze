@@ -15,8 +15,28 @@ class AnalyzeDB(object):
         Base.metadata.bind=self.engine
         Base.metadata.create_all()
 
+    def global_setting_update(self,email,smtp_server,smtp_port,smtp_username,
+                        smtp_password):
+        glb=self.session.query(GlobalSetting).first()
+        if glb:
+            glb.email=email
+            glb.smtp_server=smtp_server
+            glb.smtp_port=smtp_port
+            glb.smtp_username=smtp_username
+            glb.smtp_password=smtp_password
+        else:
+            glb=GlobalSetting(email=email,smtp_server=smtp_server,smtp_port=smtp_port,
+                                smtp_username=smtp_username,smtp_password=smtp_password)
+            self.session.add(glb)
+
+        self.session.commit()
+
     def global_setting(self):
-        return self.session.query(GlobalSetting.email).first()
+        return self.session.query(GlobalSetting.email,
+                                GlobalSetting.smtp_server,
+                                GlobalSetting.smtp_port,
+                                GlobalSetting.smtp_username,
+                                GlobalSetting.smtp_password).first()
 
     def user_list(self):
         return self.session.query(User.name,User.email,User.mobile_phone,
