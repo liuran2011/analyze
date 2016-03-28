@@ -10,8 +10,8 @@ import datetime
 import copy
 
 class Generator(BasicGenerator):
-    def __init__(self,conf,env,db):
-        super(Generator,self).__init__(conf,env,db)
+    def __init__(self,conf,env,db,notify):
+        super(Generator,self).__init__(conf,env,db,notify)
         
         pdfmetrics.registerFont(ttfonts.TTFont('song','fonts/simsun.ttc'))
         self.style=copy.deepcopy(getSampleStyleSheet()['Normal'])

@@ -12,6 +12,8 @@ class RestServer(object):
     USER_COMPANY="company"
     USER_MONITOR_KEYWORD="monitor_keyword"
     USER_LAST_REPORT_TIME="last_report_time"
+    USER_REPORT_START_TIME="report_start_time"
+    USER_REPORT_END_TIME="report_end_time"
 
     GLB_SETTING='global_setting'
     GLB_SETTING_EMAIL='email'
@@ -20,9 +22,10 @@ class RestServer(object):
     GLB_SETTING_SMTP_USERNAME='smtp_username'
     GLB_SETTING_SMTP_PASSWORD='smtp_password'
 
-    def __init__(self,conf,db):
+    def __init__(self,conf,db,mq):
         self.conf=conf
         self.db=db
+        self.mq=mq
 
         self.app=Flask(__name__)
         self.app.add_url_rule('/global_setting',
@@ -43,6 +46,38 @@ class RestServer(object):
 
         self.app.add_url_rule('/token','get_token',self._token_get,
                                 methods=['GET'])
+
+        self.app.add_url_rule('/report','gen_report',self._gen_report,
+                                methods=['POST'])
+
+    def _report_check(self,req):
+        if not req:
+            return HTTP_BAD_REQUEST_STR,HTTP_BAD_REQUEST
+
+        if (not req.get(self.USER_NAME,None)
+            or not req.get(self.USER_REPORT_START_TIME,None)
+            or not req.get(self.USER_REPORT_END_TIME,None)):
+            return HTTP_BAD_REQUEST_STR,HTTP_BAD_REQUEST
+        
+        if (len(req[self.USER_NAME])==0
+            or len(req[self.USER_REPORT_START_TIME])=0):
+            return HTTP_BAD_REQUEST_STR,HTTP_BAD_REQUEST
+
+        return HTTP_OK_STR,HTTP_OK
+
+    def _gen_report(self):
+        req=request.json
+        ret_str,ret=self._report_check(req)
+        if ret!=HTTP_OK:
+            return ret_str,ret
+
+        self.mq.report_request(req[self.USER_NAME],
+                                req[self.USER_REPORT_START_TIME],
+                                req[self.USER_REPORT_END_TIME])
+
+        #wait reponse
+
+        return HTTP_OK_STR,HTTP_OK
 
     def _token_get(self):
         pass

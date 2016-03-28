@@ -40,7 +40,9 @@ class ReportGenerator(object):
 
     def main(self):
         module=importlib.import_module("report.%s"%(self.conf.format()))
-        self.engine=module.Generator(self.conf,self.env,self.db)
+        notify_module=importlib.import_module("notify.%s"%(self.conf.notify()))
+        self.notify=notify_module.Notify()
+        self.engine=module.Generator(self.conf,self.env,self.db,self.notify)
         self.engine.run()
 
 if __name__=="__main__":

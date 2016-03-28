@@ -37,6 +37,18 @@ class AnalyzeMQ(object):
 
         self._stats_init()
         self._user_info_init()
+        self._report_init()
+
+    def _report_init(self):
+        self.report_req_exchange=Exchange(REPORT_REQUEST_EXCHANGE,"direct",delivery_mode=1)
+        self.report_req=self.connect.Producer(exchange=self.report_exchange,
+                                    routing_key=REPORT_REQUEST_ROUTING_KEY)
+        self.report_res_exchange=Exchange(REPORT_RESPONSE_EXCHANGE,"direct",delivery_mode=1)
+
+    def report_request(self,username,req_time,res_time):
+        msg={REPORT_USERNAME:username,REPORT_REQUEST_TIME:req_time,
+            REPORT_RESPONSE_TIME:res_time}
+        self.report.publish(msg)
 
     def _user_info_init(self):
         self.se_queues={}

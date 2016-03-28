@@ -20,7 +20,7 @@ class Analyze(object):
         self._db_init()
         self.se_mgr=SearchEngineMgr(self.conf)
         self._rabbitmq_init()
-        self.rest_server=RestServer(self.conf,self.db)
+        self.rest_server=RestServer(self.conf,self.db,self.analyze_mq)
 
     def _db_init(self):
         self.db=AnalyzeDB(self.conf)

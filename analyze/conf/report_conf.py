@@ -10,3 +10,6 @@ class ReportConf(BasicConf):
 
     def interval(self):
         return self.parser.get(DEFAULT,INTERVAL)
+
+    def notify(self):
+        return self.parser.get(DEFAULT,NOTIFY)

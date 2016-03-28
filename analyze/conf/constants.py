@@ -9,6 +9,7 @@ SEARCH_ENGINE_DOWN_TIME="search_engine_down_time"
 ALGORITHM="algorithm"
 INTERVAL="interval"
 FORMAT="format"
+NOTIFY="notify"
 
 #database section
 DATABASE="database"

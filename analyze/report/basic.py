@@ -1,10 +1,11 @@
 import time
 
 class BasicGenerator(object):
-    def __init__(self,conf,env,db):
+    def __init__(self,conf,env,db,self.notify):
         self.conf=conf
         self.db=db
         self.env=env
+        self.notify=notify
 
     def _run_user(self,userid,username):
         result_list=self.db.result_list(userid)
