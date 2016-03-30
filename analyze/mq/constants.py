@@ -19,3 +19,7 @@ REPORT_RESPONSE_EXCHANGE="report_response_exchange"
 
 REPORT_REQUEST_ROUTING_KEY="report.request.routing_key"
 REPORT_RESPONSE_ROUTING_KEY="report.response.routing_key"
+
+REPORT_RESPONSE_QUEUE="report_response_queue"
+
+MQ_TIMEOUT=10.0

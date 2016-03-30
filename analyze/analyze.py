@@ -21,6 +21,7 @@ class Analyze(object):
         self.se_mgr=SearchEngineMgr(self.conf)
         self._rabbitmq_init()
         self.rest_server=RestServer(self.conf,self.db,self.analyze_mq)
+        self.analyze_mq.set_rest_server(self.rest_server)
 
     def _db_init(self):
         self.db=AnalyzeDB(self.conf)

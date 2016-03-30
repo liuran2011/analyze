@@ -4,6 +4,22 @@ from kombu.mixins import ConsumerMixin
 from constants import *
 from log.log import LOG
 
+class ReportResponseConsumer(ConsumerMixin):
+    def __init__(self,connection):
+        self.connection=connection
+        self.callback=None
+        self.report_res_exchange=Exchange(REPORT_RESPONSE_EXCHANGE,"direct",delivery_mode=1)
+        self.report_res_queue=Queue(REPORT_RESPONSE_QUEUE,
+                                exchange=self.report_res_exchange,
+                                routing_key=REPORT_RESPONSE_ROUTING_KEY)
+    
+    def get_consumers(self,Consumer,channel):
+        return [Consumer(queue=[self.report_res_queue],callbacks=[self._report_res_proc])]
+
+    def _report_res_proc(self,body,message):
+        self.callback(body)
+        message.ack()
+
 class AnalyzeConsumer(ConsumerMixin):
     def __init__(self,connection,mq):
         self.connection=connection
@@ -34,21 +50,24 @@ class AnalyzeMQ(object):
     def __init__(self,conf,se_mgr):
         self.conf=conf
         self.se_mgr=se_mgr
-
         self._stats_init()
         self._user_info_init()
         self._report_init()
 
+    def set_rest_server(self,rest_server):
+        self.rest_server=rest_server
+        self.report_res_consumer.callback=self.rest_server.report_res
+
     def _report_init(self):
         self.report_req_exchange=Exchange(REPORT_REQUEST_EXCHANGE,"direct",delivery_mode=1)
-        self.report_req=self.connect.Producer(exchange=self.report_exchange,
+        self.report_req=self.connect.Producer(exchange=self.report_req_exchange,
                                     routing_key=REPORT_REQUEST_ROUTING_KEY)
-        self.report_res_exchange=Exchange(REPORT_RESPONSE_EXCHANGE,"direct",delivery_mode=1)
+        self.report_res_consumer=ReportResponseConsumer(self.connect)
 
     def report_request(self,username,req_time,res_time):
         msg={REPORT_USERNAME:username,REPORT_REQUEST_TIME:req_time,
             REPORT_RESPONSE_TIME:res_time}
-        self.report.publish(msg)
+        self.report_req.publish(msg)
 
     def _user_info_init(self):
         self.se_queues={}

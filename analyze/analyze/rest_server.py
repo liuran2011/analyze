@@ -1,6 +1,8 @@
 from flask import *
 from log.log import LOG
 from http_codes import *
+import gevent
+import mq.constants as mqc
 
 class RestServer(object):
     USER_LIST="user_list"
@@ -50,6 +52,9 @@ class RestServer(object):
         self.app.add_url_rule('/report','gen_report',self._gen_report,
                                 methods=['POST'])
 
+    def report_res(self,body):
+        self._report_res=body
+
     def _report_check(self,req):
         if not req:
             return HTTP_BAD_REQUEST_STR,HTTP_BAD_REQUEST
@@ -60,7 +65,7 @@ class RestServer(object):
             return HTTP_BAD_REQUEST_STR,HTTP_BAD_REQUEST
         
         if (len(req[self.USER_NAME])==0
-            or len(req[self.USER_REPORT_START_TIME])=0):
+            or len(req[self.USER_REPORT_START_TIME])==0):
             return HTTP_BAD_REQUEST_STR,HTTP_BAD_REQUEST
 
         return HTTP_OK_STR,HTTP_OK
@@ -76,8 +81,13 @@ class RestServer(object):
                                 req[self.USER_REPORT_END_TIME])
 
         #wait reponse
-
-        return HTTP_OK_STR,HTTP_OK
+        self._report_res=None
+        self.report_event=gevent.event.Event()
+        self.report_event.wait(timeout=mqc.MQ_TIMEOUT)
+        if self._report_res:
+            return HTTP_OK_STR,HTTP_OK
+        else:
+            return HTTP_REQUEST_TIMEOUT_STR,HTTP_REQUEST_TIMEOUT
 
     def _token_get(self):
         pass
