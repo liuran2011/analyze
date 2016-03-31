@@ -11,8 +11,9 @@ MESSAGE_STATS="stats"
 MESSAGE_USER_INFO="user_info"
 
 REPORT_USERNAME="username"
-REPORT_REQUEST_TIME="request_time"
-REPORT_RESPONSE_TIME="response_time"
+REPORT_REQUEST_START_TIME="request_start_time"
+REPORT_REQUEST_END_TIME="request_end_time"
+REPORT_STATUS="report_status"
 
 REPORT_REQUEST_EXCHANGE="report_reqeust_exchange"
 REPORT_RESPONSE_EXCHANGE="report_response_exchange"
@@ -21,5 +22,6 @@ REPORT_REQUEST_ROUTING_KEY="report.request.routing_key"
 REPORT_RESPONSE_ROUTING_KEY="report.response.routing_key"
 
 REPORT_RESPONSE_QUEUE="report_response_queue"
+REPORT_REQUEST_QUEUE="report_request_queue"
 
 MQ_TIMEOUT=10.0

@@ -4,7 +4,7 @@ import smtplib
 
 class Notify(BasicNotify):
     def __init__(self,db):
-        super(Notify,this).__init__(db)
+        super(Notify,self).__init__(db)
 
     def send(self,report):
         setting=self.db.global_setting()

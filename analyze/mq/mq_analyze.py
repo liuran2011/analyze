@@ -1,5 +1,4 @@
 from kombu import Exchange,Queue,Consumer,Connection
-from constants import *
 from kombu.mixins import ConsumerMixin
 from constants import *
 from log.log import LOG
@@ -14,7 +13,7 @@ class ReportResponseConsumer(ConsumerMixin):
                                 routing_key=REPORT_RESPONSE_ROUTING_KEY)
     
     def get_consumers(self,Consumer,channel):
-        return [Consumer(queue=[self.report_res_queue],callbacks=[self._report_res_proc])]
+        return [Consumer(queues=[self.report_res_queue],callbacks=[self._report_res_proc])]
 
     def _report_res_proc(self,body,message):
         self.callback(body)
@@ -64,9 +63,9 @@ class AnalyzeMQ(object):
                                     routing_key=REPORT_REQUEST_ROUTING_KEY)
         self.report_res_consumer=ReportResponseConsumer(self.connect)
 
-    def report_request(self,username,req_time,res_time):
-        msg={REPORT_USERNAME:username,REPORT_REQUEST_TIME:req_time,
-            REPORT_RESPONSE_TIME:res_time}
+    def report_request(self,username,req_start_time,req_end_time):
+        msg={REPORT_USERNAME:username,REPORT_REQUEST_START_TIME:req_start_time,
+            REPORT_REQUEST_END_TIME:req_end_time}
         self.report_req.publish(msg)
 
     def _user_info_init(self):

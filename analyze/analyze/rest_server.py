@@ -52,8 +52,8 @@ class RestServer(object):
         self.app.add_url_rule('/report','gen_report',self._gen_report,
                                 methods=['POST'])
 
-    def report_res(self,body):
-        self._report_res=body
+    def report_res(self,status_code):
+        self._report_res=status_code
 
     def _report_check(self,req):
         if not req:
@@ -81,13 +81,13 @@ class RestServer(object):
                                 req[self.USER_REPORT_END_TIME])
 
         #wait reponse
-        self._report_res=None
+        self._report_res=HTTP_INTERNAL_ERROR
         self.report_event=gevent.event.Event()
         self.report_event.wait(timeout=mqc.MQ_TIMEOUT)
-        if self._report_res:
-            return HTTP_OK_STR,HTTP_OK
+        if not self._report_res or self._report_res!=HTTP_OK:
+            return HTTP_INTERNAL_ERROR_STR,self._report_res
         else:
-            return HTTP_REQUEST_TIMEOUT_STR,HTTP_REQUEST_TIMEOUT
+            return HTTP_OK_STR,HTTP_OK
 
     def _token_get(self):
         pass

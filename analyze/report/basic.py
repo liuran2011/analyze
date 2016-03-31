@@ -1,7 +1,7 @@
 import time
 
 class BasicGenerator(object):
-    def __init__(self,conf,env,db,self.notify):
+    def __init__(self,conf,env,db,notify):
         self.conf=conf
         self.db=db
         self.env=env
