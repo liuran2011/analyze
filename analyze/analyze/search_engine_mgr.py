@@ -45,7 +45,8 @@ class SearchEngineMgr(object):
 
         self.stats[key]={self.SE_STATS_TIMER:down_time,self.SE_STATS_STAT:msg}
 
-        print self.stats
+    def stats_get(self):
+        return self.stats
 
     def register_notifier(self,func):
         for f in self.notify_chain:

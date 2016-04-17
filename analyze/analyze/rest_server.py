@@ -26,16 +26,20 @@ class RestServer(object):
     GLB_SETTING_SMTP_USERNAME='smtp_username'
     GLB_SETTING_SMTP_PASSWORD='smtp_password'
 
-    def __init__(self,conf,db,mq):
+    def __init__(self,conf,db,mq,se_mgr):
         self.conf=conf
         self.db=db
         self.mq=mq
+        self.se_mgr=se_mgr
 
         self.app=Flask(__name__)
         self.app.add_url_rule('/global_setting',
                                 'set_global_setting',
                                 self._global_setting,
                                 methods=['POST','GET'])
+
+        self.app.add_url_rule('/search_engine','search_engine_stats',
+                            self._se_status,methods=['GET'])
 
         self.app.add_url_rule('/user','add_user',self._add_user,
                             methods=['POST'])
@@ -53,6 +57,9 @@ class RestServer(object):
 
         self.app.add_url_rule('/report','gen_report',self._gen_report,
                                 methods=['POST'])
+
+    def _se_status(self):
+        return jsonify(self.se_mgr.stats_get()),HTTP_OK
 
     def report_res(self,status_code):
         self.report_event.set()
