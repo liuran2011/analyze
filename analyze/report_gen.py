@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 
+#coding=utf-8
+
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 import gevent.monkey
 gevent.monkey.patch_all()
 
@@ -23,7 +29,7 @@ class ReportGenerator(object):
         self.db=ReportDB(self.basic_conf)
 
     def report_request(self,username,report_start_time,report_end_time):
-        return True
+        self.engine.run_user(username,report_start_time,report_end_time)
 
     def _log_init(self):
         id='report'

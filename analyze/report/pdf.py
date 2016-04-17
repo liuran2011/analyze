@@ -23,8 +23,6 @@ class Generator(BasicGenerator):
         self.content=[]
         self.content.append(Paragraph(USERNAME+':'+username,self.style))
 
-
-
     def add(self,result):
         self.content.append(Paragraph(DATETIME+":"+result[DATETIME_INDEX].ctime()+" "
                             +KEYWORD+":"+result[KEYWORD_INDEX]+" "

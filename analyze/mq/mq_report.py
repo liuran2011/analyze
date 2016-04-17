@@ -1,3 +1,5 @@
+#coding=utf-8
+
 from constants import *
 from kombu.mixins import ConsumerMixin
 from kombu import Exchange,Queue,Consumer,Connection

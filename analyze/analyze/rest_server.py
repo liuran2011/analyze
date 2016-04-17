@@ -1,3 +1,5 @@
+#coding=utf-8
+
 from flask import *
 from log.log import LOG
 from http_codes import *

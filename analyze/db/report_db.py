@@ -25,6 +25,21 @@ class ReportDB(object):
             return None
 
         return setting
+    
+    def result_list_direct(self,username,start_time,end_time):
+        user=self.session.query(User.id).filter_by(name=username).first()
+        if not user:
+            LOG.info('user %s not find'%(username))
+            return []
+        
+        if not end_time:
+            end_time=datetime.datetime.now()
+
+        results=self.session.query(Result.url,Result.source_url,Result.datetime,
+                            Result.keyword).filter(Result.user_id==user.id).filter(
+                            Result.datetime>=start_time).filter(Result.datetime<end_time).all()
+        
+        return results
 
     def result_list(self,user_id):
         user=self.session.query(User).filter_by(id=user_id).first()

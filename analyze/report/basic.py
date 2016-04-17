@@ -1,3 +1,5 @@
+#coding=utf-8
+
 import time
 
 class BasicGenerator(object):
@@ -9,6 +11,16 @@ class BasicGenerator(object):
 
     def _run_user(self,userid,username):
         result_list=self.db.result_list(userid)
+        if not result_list or len(result_list)==0:
+            return
+
+        self.ready(username)
+        for result in result_list:
+            self.add(result)
+        self.finish(username)
+
+    def run_user(self,username,start_time,end_time):
+        result_list=self.db.result_list_direct(username,start_time,end_time)
         if not result_list or len(result_list)==0:
             return
 
