@@ -2,6 +2,7 @@ from kombu import Exchange,Queue,Consumer,Connection
 from kombu.mixins import ConsumerMixin
 from constants import *
 from log.log import LOG
+import gevent
 
 class ReportResponseConsumer(ConsumerMixin):
     def __init__(self,connection):
@@ -16,7 +17,7 @@ class ReportResponseConsumer(ConsumerMixin):
         return [Consumer(queues=[self.report_res_queue],callbacks=[self._report_res_proc])]
 
     def _report_res_proc(self,body,message):
-        self.callback(body)
+        self.callback(body[REPORT_STATUS])
         message.ack()
 
 class AnalyzeConsumer(ConsumerMixin):
@@ -98,4 +99,5 @@ class AnalyzeMQ(object):
         LOG.info("del queue %s"%(id))
 
     def run(self):
+        gevent.spawn(self.report_res_consumer.run)
         self.consumer.run()

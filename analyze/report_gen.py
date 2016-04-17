@@ -23,7 +23,7 @@ class ReportGenerator(object):
         self.db=ReportDB(self.basic_conf)
 
     def report_request(self,username,report_start_time,report_end_time):
-        pass
+        return True
 
     def _log_init(self):
         id='report'

@@ -53,6 +53,7 @@ class RestServer(object):
                                 methods=['POST'])
 
     def report_res(self,status_code):
+        self.report_event.set()
         self._report_res=status_code
 
     def _report_check(self,req):
