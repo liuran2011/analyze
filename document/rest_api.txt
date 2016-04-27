@@ -1,0 +1,47 @@
+1./global_setting
+  http方法: GET
+  功能: 获取全局配置
+  实例：http://192.168.1.101/global_setting
+  
+  http方法：POST
+  功能：修改全局配置
+  参数：
+  实例：http://192.168.1.101/global_setting
+        {}
+
+2. /search_engine
+    http方法：GET
+    功能：获取搜索引擎的状态
+    实例：http://192.168.1.101/search_engine
+
+3. /user
+    http方法：GET
+    功能：获取用户信息
+    实例：http://192.168.1.101/user
+
+    http方法：POST
+    功能：添加用户
+    参数：
+    实例：http://192.168.1.101/user
+        {
+        }
+
+4. /user/username
+    http方法：PUT
+    功能：更改用户信息
+    参数：
+    实例：http://192.168.1.101/user/test
+        {
+        }
+    
+    http方法：DELETE
+    功能：删除用户
+    实例：http://192.168.1.101/user/test
+
+5. /report
+    http方法：POST
+    功能：生成报告
+    参数：
+    实例：http://192.168.1.101/report
+        { }
+
