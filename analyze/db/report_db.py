@@ -17,8 +17,16 @@ class ReportDB(object):
     def user_list(self):
         return self.session.query(User.id,User.name).all();
 
+    def user_email(self,username):
+        result=self.session.query(User.email).filter_by(name=username).first()
+        if not result:
+            LOG.error("user %s do not setting email"%(username))
+            return None
+        
+        return result.email
+
     def global_setting(self):
-        setting=self.session.query(GlobalSetting.email,GlobalSetting.smtp_host,
+        setting=self.session.query(GlobalSetting.email,GlobalSetting.smtp_server,
                             GlobalSetting.smtp_port,GlobalSetting.smtp_username,
                             GlobalSetting.smtp_password).first()
         if not setting:

@@ -35,3 +35,8 @@ class Generator(BasicGenerator):
         file_name=self.env.run_dir()+"/"+str(date_time.date())+str(date_time.time())+".pdf"
         doc=SimpleDocTemplate(file_name)
         doc.build(self.content)
+        
+        return file_name
+
+    def format(self):
+        return "pdf"

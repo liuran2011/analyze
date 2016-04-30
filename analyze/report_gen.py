@@ -29,7 +29,7 @@ class ReportGenerator(object):
         self.db=ReportDB(self.basic_conf)
 
     def report_request(self,username,report_start_time,report_end_time):
-        self.engine.run_user(username,report_start_time,report_end_time)
+        return self.engine.run_user(username,report_start_time,report_end_time)
 
     def _log_init(self):
         id='report'

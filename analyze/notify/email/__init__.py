@@ -1,3 +1,5 @@
+#coding=utf-8
+
 from notify.basic import BasicNotify
 from log.log import LOG
 import smtplib
@@ -39,7 +41,7 @@ class Notify(BasicNotify):
 
         try:
             smtp=smtplib.SMTP()    
-            smtp.connect(setting.smtp_host,setting.smtp_port)
+            smtp.connect(setting.smtp_server,setting.smtp_port)
             smtp.login(setting.smtp_username,setting.smtp_password)
             smtp.sendmail(setting.email,sendto,msg.as_string())
             smtp.close()
@@ -47,5 +49,5 @@ class Notify(BasicNotify):
             return True
 
         except Exception as e:
-            LOG.error("send mail to %s failed."%(sendto))
+            LOG.error("send mail to %s failed. exception: %s"%(sendto,e))
             return False
