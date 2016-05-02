@@ -11,7 +11,7 @@ class Scheduler(object):
         filter=self.conf.filter_list()
         self.filter=importlib.import_module(filter).Filter()
 
-    def scheduler_user(self,username):
+    def schedule_user(self,username):
         if len(self.se_mgr.stats_get())==0:
             LOG.info("not search engine.")
             return

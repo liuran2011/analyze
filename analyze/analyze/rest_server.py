@@ -26,11 +26,12 @@ class RestServer(object):
     GLB_SETTING_SMTP_USERNAME='smtp_username'
     GLB_SETTING_SMTP_PASSWORD='smtp_password'
 
-    def __init__(self,conf,db,mq,se_mgr):
+    def __init__(self,conf,db,mq,se_mgr,scheduler):
         self.conf=conf
         self.db=db
         self.mq=mq
         self.se_mgr=se_mgr
+        self.scheduler=scheduler
 
         self.app=Flask(__name__)
         self.app.add_url_rule('/global_setting',
@@ -149,7 +150,9 @@ class RestServer(object):
         self.db.user_add(req[self.USER_NAME],req[self.USER_PASSWORD],req[self.USER_EMAIL],
                         req[self.USER_MOBILE_PHONE],req[self.USER_PERMISSION],
                         req[self.USER_COMPANY],req[self.USER_MONITOR_KEYWORD])
-        
+       
+        self.scheduler.schedule_user(req[self.USER_NAME])
+
         return HTTP_OK_STR,HTTP_OK
 
     def _get_user(self):
