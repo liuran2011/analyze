@@ -11,15 +11,24 @@ class SearchEngineMgr(object):
 
     def __init__(self,conf):
         self.conf=conf
+        self.scheduler=None
 
         self.stats={}
         self.notify_chain=[]
-
+        
         self.se_aging_task=gevent.spawn(self._aging_check)
 
     def _aging_timer_fire(self,id):
         for func in self.notify_chain:
             func(id)
+
+        user_list=self.stats[id].get(self.SE_USER_LIST,None)
+        if not user_list:
+            return
+
+        del_list=copy.deepcopy(user_list)
+        for username in del_list:
+            self.del_user(username)
 
     def _aging_check(self):
         while True:
@@ -44,8 +53,11 @@ class SearchEngineMgr(object):
         key=msg[mqc.MESSAGE_ID]
         down_time=int(self.conf.search_engine_down_time())
 
-        self.stats[key]={self.SE_STATS_TIMER:down_time,self.SE_STATS_STAT:msg}
+        if not self.stats.get(key,None):
+            self.scheduler.schedule_users()
 
+        self.stats[key]={self.SE_STATS_TIMER:down_time,self.SE_STATS_STAT:msg}
+            
     def stats_get(self):
         return self.stats
 
@@ -56,11 +68,35 @@ class SearchEngineMgr(object):
 
         return None
 
+    def user_exist(self,username):
+        for key,se in self.stats.iteritems():
+            user_list=se.get(self.SE_USER_LIST,None)
+            if not user_list:
+                continue
+
+            if username in user_list:
+                return True
+
+        return False
+
     def add_user(self,se_key,username):
         if not self.stats[key].get(self.SE_USER_LIST,None):
             self.stats[key][self.SE_USER_LIST]=[username]
         else:
             self.stats[key][self.SE_USER_LIST].append(username)
+
+    def del_user(self,username):
+        for key,se in self.stats.iteritems():
+            user_list=se.get(self.SE_USER_LIST,None)
+            if not user_list:
+                continue
+
+            if username in user_list:
+                self.stats[key][self.SE_USER_LIST].remove(username)
+                break
+
+    def set_scheduler(self,scheduler):
+        self.scheduler=scheduler
 
     def register_notifier(self,func):
         for f in self.notify_chain:

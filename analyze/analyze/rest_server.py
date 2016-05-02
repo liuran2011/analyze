@@ -151,7 +151,7 @@ class RestServer(object):
                         req[self.USER_MOBILE_PHONE],req[self.USER_PERMISSION],
                         req[self.USER_COMPANY],req[self.USER_MONITOR_KEYWORD])
        
-        self.scheduler.schedule_user(req[self.USER_NAME])
+        self.scheduler.add_user(req[self.USER_NAME])
 
         return HTTP_OK_STR,HTTP_OK
 
@@ -169,7 +169,8 @@ class RestServer(object):
 
     def _del_user(self,username):
         self.db.user_del(username)
-        
+        self.scheduler.del_user(username)
+
         return HTTP_OK_STR,HTTP_OK
 
     def _global_setting_check(self,req):
