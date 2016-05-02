@@ -5,6 +5,9 @@ class AnalyzeConf(BasicConf):
     def __init__(self,conf_file):
         super(AnalyzeConf,self).__init__(conf_file)
 
+    def filter_list(self):
+        return self.parser.get(DEFAULT,SCHEDULER_FILTER)
+
     def rest_server_address(self):
         return self.parser.get(REST,REST_SERVER_ADDRESS)
 

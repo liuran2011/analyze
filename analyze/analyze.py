@@ -13,6 +13,7 @@ from mq.mq_analyze import AnalyzeMQ
 from analyze.search_engine_mgr import SearchEngineMgr
 from db.analyze_db import AnalyzeDB
 from analyze.rest_server import RestServer
+from analyze.scheduler import Scheduler
 
 class Analyze(object):
     def __init__(self):
@@ -24,6 +25,7 @@ class Analyze(object):
         self._rabbitmq_init()
         self.rest_server=RestServer(self.conf,self.db,self.analyze_mq,self.se_mgr)
         self.analyze_mq.set_rest_server(self.rest_server)
+        self.scheduler=Scheduler(self.conf)
 
     def _db_init(self):
         self.db=AnalyzeDB(self.conf)

@@ -10,6 +10,7 @@ ALGORITHM="algorithm"
 INTERVAL="interval"
 FORMAT="format"
 NOTIFY="notify"
+SCHEDULER_FILTER="filter_list"
 
 #database section
 DATABASE="database"

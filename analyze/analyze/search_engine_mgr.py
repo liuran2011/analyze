@@ -7,6 +7,7 @@ class SearchEngineMgr(object):
     SE_AGING_TIMER_INTERVAL=1
     SE_STATS_TIMER="timer"
     SE_STATS_STAT="stat"
+    SE_USER_LIST="user_list"
 
     def __init__(self,conf):
         self.conf=conf
@@ -47,6 +48,19 @@ class SearchEngineMgr(object):
 
     def stats_get(self):
         return self.stats
+
+    def get_key(self,search_engine):
+        for key,stat in self.stats.iteritems():
+            if stat==search_engine:
+                return key
+
+        return None
+
+    def add_user(self,se_key,username):
+        if not self.stats[key].get(self.SE_USER_LIST,None):
+            self.stats[key][self.SE_USER_LIST]=[username]
+        else:
+            self.stats[key][self.SE_USER_LIST].append(username)
 
     def register_notifier(self,func):
         for f in self.notify_chain:
