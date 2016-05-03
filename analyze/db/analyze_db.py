@@ -15,6 +15,16 @@ class AnalyzeDB(object):
         Base.metadata.bind=self.engine
         Base.metadata.create_all()
 
+    def negative_word_update(self,word):
+        negative_word=self.session.query(NegativeWord).first()
+        if negative_word:
+            negative_word.word=word
+        else:
+            negative_word=NegativeWord(word=word)
+            self.session.add(negative_word)
+
+        self.sesion.commit()
+
     def global_setting_update(self,email,smtp_server,smtp_port,smtp_username,
                         smtp_password):
         glb=self.session.query(GlobalSetting).first()
@@ -58,6 +68,22 @@ class AnalyzeDB(object):
         self.session.commit()
         
         return True
+
+    def negative_word(self):
+        negative_word=self.session.query(NegativeWord.word).first()
+        if not negative_word:
+            LOG.error("get negative word failed.")
+            return None
+
+        return negative_word.word
+
+    def user_get(self,username):
+        user=self.session.query(User.name,User.monitor_keyword).filter_by(name=username).first()
+        if not user:
+            LOG.error("username %s not exist."%(username))
+            return None
+        
+        return user
 
     def user_add(self,username,password,email,
                 mobile_phone,permission,company,monitor_keyword):

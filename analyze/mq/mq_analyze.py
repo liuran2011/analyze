@@ -100,6 +100,16 @@ class AnalyzeMQ(object):
         producer.close()
         LOG.info("del queue %s"%(id))
 
+    def send_user_info(self,key,user_list):
+        if not self.se_queues.get(key,None):
+            LOG.error("key %s do not have search engine queue."%(key))
+            return
+
+        LOG.info("publish user_list: %s to search engine %s"%(user_list,key))
+
+        msg={SE_USER_LIST:user_list}
+        se_queues[key].publish(msg)
+
     def run(self):
         gevent.spawn(self.report_res_consumer.run)
         self.consumer.run()

@@ -2,6 +2,7 @@ import mq.constants as mqc
 import gevent
 import time
 from log.log import LOG
+import search_engine.constants as sec
 
 class SearchEngineMgr(object):
     SE_AGING_TIMER_INTERVAL=1
@@ -9,9 +10,11 @@ class SearchEngineMgr(object):
     SE_STATS_STAT="stat"
     SE_USER_LIST="user_list"
 
-    def __init__(self,conf):
+    def __init__(self,conf,db):
         self.conf=conf
+        self.db=db
         self.scheduler=None
+        self.mq=None
 
         self.stats={}
         self.notify_chain=[]
@@ -79,11 +82,31 @@ class SearchEngineMgr(object):
 
         return False
 
+    def _send_user_info(self,key,username_list):
+        negative_word=self.db.negative_word()
+        if not negative_word:
+            LOG.error("no negative word. so no need dispatch user.")
+            return
+
+        user_info_list=[]
+        for username in username_list:
+            user_info=self.db.user_get(username)
+            if not user_info:
+                continue
+            
+            user_info_list.append({sec.USERNAME:user_info.name,
+                    sec.KEYWORD:user_info.monitor_keyword,
+                    sec.NEGATIVE_WORD:negative_word})
+
+        self.mq.send_user_info(key,user_info_list)
+
     def add_user(self,se_key,username):
         if not self.stats[key].get(self.SE_USER_LIST,None):
             self.stats[key][self.SE_USER_LIST]=[username]
         else:
             self.stats[key][self.SE_USER_LIST].append(username)
+
+        self.mq.send_user_info(se_key,self.stats[key][self.SE_USER_LIST])
 
     def del_user(self,username):
         for key,se in self.stats.iteritems():
@@ -93,10 +116,14 @@ class SearchEngineMgr(object):
 
             if username in user_list:
                 self.stats[key][self.SE_USER_LIST].remove(username)
+                self._send_user_info(key,self.stats[key][self.SE_USER_LIST])
                 break
 
     def set_scheduler(self,scheduler):
         self.scheduler=scheduler
+    
+    def set_mq(self,mq):
+        self.mq=mq
 
     def register_notifier(self,func):
         for f in self.notify_chain:

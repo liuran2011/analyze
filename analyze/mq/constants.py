@@ -6,6 +6,8 @@ SE_USER_EXCHANGE="se_user_exchange"
 SE_USER_QUEUE_SUFFIX="user.queue"
 SE_USER_ROUTING_KEY_SUFFIX="user.routing_key"
 
+SE_USER_LIST="user_list"
+
 MESSAGE_ID="id"
 MESSAGE_STATS="stats"
 MESSAGE_USER_INFO="user_info"

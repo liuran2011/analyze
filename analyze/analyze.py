@@ -21,10 +21,11 @@ class Analyze(object):
         self._log_init()
         self._conf_init()
         self._db_init()
-        self.se_mgr=SearchEngineMgr(self.conf)
+        self.se_mgr=SearchEngineMgr(self.conf,self.db)
         self._rabbitmq_init()
         self.scheduler=Scheduler(self.conf,self.se_mgr,self.db)
         self.se_mgr.set_scheduler(self.scheduler)
+        self.se_mgr.set_mq(self.analyze_mq)
         self.rest_server=RestServer(self.conf,self.db,self.analyze_mq,self.se_mgr,self.scheduler)
         self.analyze_mq.set_rest_server(self.rest_server)
 

@@ -20,4 +20,6 @@ ENGINE_NAME="name"
 ENGINE_STAT="stat"
 ENGINE_STAT_RUNNING="running"
 
-
+USERNAME="username"
+KEYWORD="keyword"
+NEGATIVE_WORD="negative_word"

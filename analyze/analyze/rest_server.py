@@ -18,6 +18,8 @@ class RestServer(object):
     USER_LAST_REPORT_TIME="last_report_time"
     USER_REPORT_START_TIME="report_start_time"
     USER_REPORT_END_TIME="report_end_time"
+    
+    NEGATIVE_WORD="negative_word"
 
     GLB_SETTING='global_setting'
     GLB_SETTING_EMAIL='email'
@@ -57,6 +59,9 @@ class RestServer(object):
                                 methods=['GET'])
 
         self.app.add_url_rule('/report','gen_report',self._gen_report,
+                                methods=['POST'])
+
+        self.app.add_url_rule('/negative_word','negative_word',self._negative_word,
                                 methods=['POST'])
 
     def _se_status(self):
@@ -152,6 +157,28 @@ class RestServer(object):
                         req[self.USER_COMPANY],req[self.USER_MONITOR_KEYWORD])
        
         self.scheduler.add_user(req[self.USER_NAME])
+
+        return HTTP_OK_STR,HTTP_OK
+
+    def _negative_word_check(self,req):
+        if not req:
+            return HTTP_BAD_REQUEST_STR,HTTP_BAD_REQUEST
+
+        if not req.get(self.NEGATIVE_WORD,None):
+            return HTTP_BAD_REQUEST_STR,HTTP_BAD_REQUEST
+
+        if len(req[self.NEGATIVE_WORD])==0:
+            return HTTP_BAD_REQUEST_STR,HTTP_BAD_REQUEST
+
+        return HTTP_OK_STR,HTTP_OK
+
+    def _negative_word(self):
+        req=request.json
+        ret_str,ret=self._negative_word_check(req)
+        if ret!=HTTP_OK:
+            return ret_str,ret
+
+        self.db.negative_word_update(req[self.NEGATIVE_WORD])
 
         return HTTP_OK_STR,HTTP_OK
 
