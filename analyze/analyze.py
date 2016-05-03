@@ -13,7 +13,7 @@ from mq.mq_analyze import AnalyzeMQ
 from analyze.search_engine_mgr import SearchEngineMgr
 from db.analyze_db import AnalyzeDB
 from analyze.rest_server import RestServer
-from analyze.scheduler import Scheduler
+from scheduler.scheduler import Scheduler
 
 class Analyze(object):
     def __init__(self):

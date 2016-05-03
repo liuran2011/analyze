@@ -10,7 +10,8 @@ class Scheduler(object):
 
     def _init_filter(self):
         filter=self.conf.filter_list()
-        self.filter=importlib.import_module(filter).Filter()
+        module_path="scheduler."+filter
+        self.filter=importlib.import_module(module_path).Filter()
 
     def schedule_users(self):
         user_list=self.db.user_list()
@@ -31,7 +32,7 @@ class Scheduler(object):
         if self.se_mgr.user_exist(username):
             return
 
-        se=self.filter(self.se_mgr.stats_get())
+        se=self.filter.select(self.se_mgr.stats_get())
         se_key=self.get_key(se)
         if not se_key:
             LOG.error("find search engine %s key failed."%(se))
