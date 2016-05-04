@@ -1,6 +1,7 @@
 import psutil
 from constants import *
 import copy
+import socket
 
 class Stats(object):
     STATS_UPDATE_INTERVAL=5
@@ -45,11 +46,12 @@ class Stats(object):
 
     def get(self):
         stats={}
-
+        
+        stats[HOSTNAME]=socket.gethostname()
         stats[CPU_STATS]=self._get_cpu_stats()
         stats[MEMORY_STATS]=self._get_mem_stats()
         stats[DISK_STATS]=self._get_disk_stats()
-        stats[ENGINE_STATS]=copy.deepcopy(self.engine_stats)
+        stats[ENGINE_STATS]=self.engine_stats
 
         return stats
 

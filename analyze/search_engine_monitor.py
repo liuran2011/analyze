@@ -20,10 +20,10 @@ class SearchEngineMonitor(object):
         self._env_init()
         self._log_init()
         self._conf_init()
+        self._engine_fork()
         self._user_info_init()
         self._rabbitmq_init()
         self._stats_init()
-        self.engine_process=[]
 
     def _stats_update(self):
         while True:
@@ -32,6 +32,10 @@ class SearchEngineMonitor(object):
 
     def _stats_init(self):
         self.stats=Stats()
+        
+        for f in os.listdir(self.env.conf_dir()):
+            self.stats.add_engine(f.strip(".conf"))
+
         self.stats_task=gevent.spawn(self._stats_update)
 
     def _rabbitmq_init(self):
@@ -65,13 +69,14 @@ class SearchEngineMonitor(object):
         loader=SearchEngineLoader(self.env,conf_file)
         loader.start()
 
-    def main(self):
+    def _engine_fork(self):
+        self.engine_process=[]
         for f in os.listdir(self.env.conf_dir()):
             p=multiprocessing.Process(target=self._load_engine,args=(f,))
             p.start()
             self.engine_process.append(p)
-            self.stats.add_engine(f)
 
+    def main(self):
         self.rabbitmq.run()
 
         for p in self.engine_process:

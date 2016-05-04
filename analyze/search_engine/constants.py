@@ -20,6 +20,8 @@ ENGINE_NAME="name"
 ENGINE_STAT="stat"
 ENGINE_STAT_RUNNING="running"
 
+HOSTNAME="hostname"
+
 USERNAME="username"
 KEYWORD="keyword"
 NEGATIVE_WORD="negative_word"

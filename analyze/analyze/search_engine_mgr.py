@@ -46,8 +46,8 @@ class SearchEngineMgr(object):
                 self.stats[key][self.SE_STATS_TIMER]=timer_count
 
             for l in se_del_list:
-                self.stats.pop(key)
                 self._aging_timer_fire(key)
+                self.stats.pop(key)
                 LOG.warn("search engine %s aging!"%(key))
 
             time.sleep(self.SE_AGING_TIMER_INTERVAL)

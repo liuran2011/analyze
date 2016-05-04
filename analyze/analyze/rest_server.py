@@ -176,7 +176,6 @@ class RestServer(object):
 
     def _negative_word(self):
         req=request.json
-        print req
         ret_str,ret=self._negative_word_check(req)
         if ret!=HTTP_OK:
             return ret_str,ret
@@ -211,7 +210,6 @@ class RestServer(object):
         return HTTP_OK_STR,HTTP_OK
 
     def _global_setting_check(self,req):
-        print req
         if not req:
             return HTTP_BAD_REQUEST_STR,HTTP_BAD_REQUEST
 
@@ -221,14 +219,14 @@ class RestServer(object):
             or not req.get(self.GLB_SETTING_SMTP_USERNAME,None)
             or not req.get(self.GLB_SETTING_SMTP_PASSWORD,None)):
             return HTTP_BAD_REQUEST_STR,HTTP_BAD_REQUEST
-        print "abc"
+        
         if (len(req[self.GLB_SETTING_EMAIL])==0
             or len(req[self.GLB_SETTING_SMTP_SERVER])==0
             or len(req[self.GLB_SETTING_SMTP_USERNAME])==0
             or len(req[self.GLB_SETTING_SMTP_PORT])==0
             or len(req[self.GLB_SETTING_SMTP_PASSWORD])==0):
             return HTTP_BAD_REQUEST_STR,HTTP_BAD_REQUEST
-        print "def"
+        
         return HTTP_OK_STR,HTTP_OK
 
     def _global_setting_set(self):

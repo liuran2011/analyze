@@ -1,5 +1,6 @@
 import importlib
 import copy
+from log.log import LOG
 
 class Scheduler(object):
     def __init__(self,conf,se_mgr,db):
