@@ -15,6 +15,10 @@ class AnalyzeDB(object):
         Base.metadata.bind=self.engine
         Base.metadata.create_all()
 
+    def negative_word(self):
+        negative_word=self.session.query(NegativeWord.word).first()
+        return negative_word
+
     def negative_word_update(self,word):
         negative_word=self.session.query(NegativeWord).first()
         if negative_word:
@@ -23,7 +27,7 @@ class AnalyzeDB(object):
             negative_word=NegativeWord(word=word)
             self.session.add(negative_word)
 
-        self.sesion.commit()
+        self.session.commit()
 
     def global_setting_update(self,email,smtp_server,smtp_port,smtp_username,
                         smtp_password):

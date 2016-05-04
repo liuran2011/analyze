@@ -63,6 +63,8 @@ class RestServer(object):
 
         self.app.add_url_rule('/negative_word','negative_word',self._negative_word,
                                 methods=['POST'])
+        self.app.add_url_rule('/negative_word','get_negative_word',self._get_negative_word,
+                            methods=['GET'])
 
     def _se_status(self):
         return jsonify(self.se_mgr.stats_get()),HTTP_OK
@@ -174,6 +176,7 @@ class RestServer(object):
 
     def _negative_word(self):
         req=request.json
+        print req
         ret_str,ret=self._negative_word_check(req)
         if ret!=HTTP_OK:
             return ret_str,ret
@@ -181,6 +184,13 @@ class RestServer(object):
         self.db.negative_word_update(req[self.NEGATIVE_WORD])
 
         return HTTP_OK_STR,HTTP_OK
+
+    def _get_negative_word(self):
+        negative_word=self.db.negative_word()
+        if not negative_word:
+            return jsonify({self.NEGATIVE_WORD:""})
+        else:
+            return jsonify({self.NEGATIVE_WORD:negative_word})
 
     def _get_user(self):
         result=[]
