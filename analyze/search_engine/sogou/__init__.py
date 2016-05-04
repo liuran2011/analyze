@@ -86,6 +86,7 @@ class SearchEngine(SearchEngineBase):
                 break
 
     def search_user(self,user):
+        print user
         LOG.info("username:%s"%(user['username']))
         LOG.info('keyword:%s'%(user['keyword']))
         LOG.info('negative_word:%s'%(user['negative_word']))

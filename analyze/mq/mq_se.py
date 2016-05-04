@@ -25,7 +25,7 @@ class SEConsumer(ConsumerMixin):
 
     def _user_info_proc(self,body,message):
         for func in self.callbacks:
-            func(body[MESSAGE_USER_INFO])
+            func(body[SE_USER_LIST])
 
         message.ack()
 

@@ -108,7 +108,7 @@ class AnalyzeMQ(object):
         LOG.info("publish user_list: %s to search engine %s"%(user_list,key))
 
         msg={SE_USER_LIST:user_list}
-        se_queues[key].publish(msg)
+        self.se_queues[key].publish(msg)
 
     def run(self):
         gevent.spawn(self.report_res_consumer.run)

@@ -17,6 +17,7 @@ class Scheduler(object):
     def schedule_users(self):
         user_list=self.db.user_list()
         if not user_list or len(user_list)==0:
+            LOG.info("not user in database.")
             return
         
         for user in user_list:
@@ -33,10 +34,9 @@ class Scheduler(object):
         if self.se_mgr.user_exist(username):
             return
 
-        se=self.filter.select(self.se_mgr.stats_get())
-        se_key=self.get_key(se)
+        se_key=self.filter.select(self.se_mgr.stats_get())
         if not se_key:
-            LOG.error("find search engine %s key failed."%(se))
+            LOG.error("filter do not select useful search engine")
             return
 
         self.se_mgr.add_user(se_key,username)

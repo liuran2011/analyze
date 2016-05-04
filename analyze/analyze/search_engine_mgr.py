@@ -3,6 +3,7 @@ import gevent
 import time
 from log.log import LOG
 import search_engine.constants as sec
+import copy
 
 class SearchEngineMgr(object):
     SE_AGING_TIMER_INTERVAL=1
@@ -57,19 +58,14 @@ class SearchEngineMgr(object):
         down_time=int(self.conf.search_engine_down_time())
 
         if not self.stats.get(key,None):
+            self.stats[key]={self.SE_STATS_TIMER:down_time,self.SE_STATS_STAT:msg}
             self.scheduler.schedule_users()
+            return
 
-        self.stats[key]={self.SE_STATS_TIMER:down_time,self.SE_STATS_STAT:msg}
+        self.stats[key].update({self.SE_STATS_TIMER:down_time,self.SE_STATS_STAT:msg})
             
     def stats_get(self):
         return self.stats
-
-    def get_key(self,search_engine):
-        for key,stat in self.stats.iteritems():
-            if stat==search_engine:
-                return key
-
-        return None
 
     def user_exist(self,username):
         for key,se in self.stats.iteritems():
@@ -96,17 +92,17 @@ class SearchEngineMgr(object):
             
             user_info_list.append({sec.USERNAME:user_info.name,
                     sec.KEYWORD:user_info.monitor_keyword,
-                    sec.NEGATIVE_WORD:negative_word})
+                    sec.NEGATIVE_WORD:negative_word.split(',')})
 
         self.mq.send_user_info(key,user_info_list)
 
-    def add_user(self,se_key,username):
+    def add_user(self,key,username):
         if not self.stats[key].get(self.SE_USER_LIST,None):
             self.stats[key][self.SE_USER_LIST]=[username]
         else:
             self.stats[key][self.SE_USER_LIST].append(username)
 
-        self.mq.send_user_info(se_key,self.stats[key][self.SE_USER_LIST])
+        self._send_user_info(key,self.stats[key][self.SE_USER_LIST])
 
     def del_user(self,username):
         for key,se in self.stats.iteritems():
