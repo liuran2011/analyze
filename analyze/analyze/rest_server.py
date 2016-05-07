@@ -1,10 +1,10 @@
 #coding=utf-8
 
 from flask import *
-from log.log import LOG
+from analyze.log.log import LOG
 from http_codes import *
 import gevent
-import mq.constants as mqc
+import analyze.mq.constants as mqc
 
 class RestServer(object):
     USER_LIST="user_list"

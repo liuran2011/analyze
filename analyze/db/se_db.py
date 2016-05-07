@@ -1,7 +1,7 @@
 from models import *
 from sqlalchemy.engine import create_engine
 from sqlalchemy.orm import sessionmaker
-from log.log import LOG
+from analyze.log.log import LOG
 import datetime
 
 class SearchEngineDB(object):

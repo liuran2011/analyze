@@ -2,7 +2,7 @@
 
 import os
 import time
-from log.log import LOG
+from analyze.log.log import LOG
 
 class BasicGenerator(object):
     def __init__(self,conf,env,db,notify):

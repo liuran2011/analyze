@@ -4,9 +4,9 @@ import sys
 import time
 import urllib
 import copy
-from search_engine.search_engine_base import SearchEngineBase
+from analyze.search_engine.search_engine_base import SearchEngineBase
 from html_parser import SogouHTMLParser
-from log.log import LOG
+from analyze.log.log import LOG
 
 class SearchEngine(SearchEngineBase):
     def __init__(self,conf,env,db):

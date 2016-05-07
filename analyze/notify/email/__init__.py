@@ -1,7 +1,7 @@
 #coding=utf-8
 
-from notify.basic import BasicNotify
-from log.log import LOG
+from analyze.notify.basic import BasicNotify
+from analyze.log.log import LOG
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText

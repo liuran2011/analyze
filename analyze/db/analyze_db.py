@@ -2,7 +2,7 @@ from models import *
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Connection
 from sqlalchemy.orm import sessionmaker
-from log.log import LOG
+from analyze.log.log import LOG
 
 class AnalyzeDB(object):
     def __init__(self,conf):

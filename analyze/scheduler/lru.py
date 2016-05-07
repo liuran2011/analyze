@@ -1,5 +1,5 @@
 from basic_filter import BasicFilter
-from analyze.search_engine_mgr import SearchEngineMgr as sem
+from analyze.analyze.search_engine_mgr import SearchEngineMgr as sem
 import sys
 
 class Filter(BasicFilter):

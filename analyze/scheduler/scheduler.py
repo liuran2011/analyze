@@ -1,6 +1,6 @@
 import importlib
 import copy
-from log.log import LOG
+from analyze.log.log import LOG
 
 class Scheduler(object):
     def __init__(self,conf,se_mgr,db):
@@ -11,7 +11,7 @@ class Scheduler(object):
 
     def _init_filter(self):
         filter=self.conf.filter_list()
-        module_path="scheduler."+filter
+        module_path="analyze.scheduler."+filter
         self.filter=importlib.import_module(module_path).Filter()
 
     def schedule_users(self):

@@ -2,7 +2,7 @@ import urllib
 from user_info_mgr import UserInfoMgr
 import copy
 import time
-from log.log import LOG
+from analyze.log.log import LOG
 import importlib
 
 class NotImplementException(Exception):
@@ -21,7 +21,7 @@ class SearchEngineBase(object):
         self._algorithm_init()
 
     def _algorithm_init(self):
-        module_name="algorithm.%s"%(self.conf.algorithm())
+        module_name="analyze.algorithm.%s"%(self.conf.algorithm())
         m=importlib.import_module(module_name)
         self.algorithm=m.Algorithm()
 

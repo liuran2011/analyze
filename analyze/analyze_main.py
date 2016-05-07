@@ -60,5 +60,8 @@ class Analyze(object):
 
         gevent.wait([mq_task,rest_task])
 
-if __name__=="__main__":
+def analyze_main():
     Analyze().main()
+    
+if __name__=="__main__":
+    analyze_main()

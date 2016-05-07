@@ -50,8 +50,8 @@ class ReportGenerator(object):
         self.env.check()
 
     def main(self):
-        module=importlib.import_module("report.%s"%(self.conf.format()))
-        notify_module=importlib.import_module("notify.%s"%(self.conf.notify()))
+        module=importlib.import_module("analyze.report.%s"%(self.conf.format()))
+        notify_module=importlib.import_module("analyze.notify.%s"%(self.conf.notify()))
         self.notify=notify_module.Notify(self.db)
         
         self.engine=module.Generator(self.conf,self.env,self.db,self.notify)
@@ -60,5 +60,8 @@ class ReportGenerator(object):
         mq_task=gevent.spawn(self.mq.run)
         gevent.wait([engine_task,mq_task])
 
-if __name__=="__main__":
+def main():
     ReportGenerator().main()
+    
+if __name__=="__main__":
+    main()

@@ -1,7 +1,7 @@
 #coding=utf-8
 
 import re
-from search_engine.html_parser_base import HTMLParserBase
+from analyze.search_engine.html_parser_base import HTMLParserBase
 
 class SogouHTMLParser(HTMLParserBase):
     def __init__(self):

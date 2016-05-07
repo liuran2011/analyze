@@ -1,7 +1,7 @@
 import ConfigParser
 
 from constants import *
-from log.log import LOG
+from analyze.log.log import LOG
 
 class BasicConf(object):
     def __init__(self,conf_file):

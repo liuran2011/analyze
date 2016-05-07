@@ -3,7 +3,7 @@
 from constants import *
 from kombu.mixins import ConsumerMixin
 from kombu import Exchange,Queue,Consumer,Connection
-from analyze.http_codes import *
+from analyze.analyze.http_codes import *
 
 class ReportRequestConsumer(ConsumerMixin):
     def __init__(self,connection,mq):

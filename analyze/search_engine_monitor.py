@@ -86,5 +86,8 @@ class SearchEngineMonitor(object):
         for p in self.engine_process:
             p.join()
 
-if __name__=="__main__":
+def main():
     SearchEngineMonitor().main()
+    
+if __name__=="__main__":
+    main()

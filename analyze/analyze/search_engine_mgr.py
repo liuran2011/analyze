@@ -1,8 +1,8 @@
-import mq.constants as mqc
+import analyze.mq.constants as mqc
 import gevent
 import time
-from log.log import LOG
-import search_engine.constants as sec
+from analyze.log.log import LOG
+import analyze.search_engine.constants as sec
 import copy
 
 class SearchEngineMgr(object):

@@ -3,7 +3,7 @@
 from kombu import Exchange,Queue,Consumer,Connection
 from kombu.mixins import ConsumerMixin
 from constants import *
-from log.log import LOG
+from analyze.log.log import LOG
 import gevent
 
 class ReportResponseConsumer(ConsumerMixin):
