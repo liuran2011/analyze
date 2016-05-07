@@ -1,12 +1,13 @@
 from basic_filter import BasicFilter
 from analyze.search_engine_mgr import SearchEngineMgr as sem
+import sys
 
 class Filter(BasicFilter):
     def __init__(self):
         super(Filter,self).__init__()
 
     def select(self,search_engine_stats):
-        user_num=0
+        user_num=sys.maxint
         target_key=None
         for key,value in search_engine_stats.iteritems():
             if not value.get(sem.SE_USER_LIST,None):

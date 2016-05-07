@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 import gevent
 from conf.search_engine_conf import SearchEngineConf
 from conf.analyze_conf import AnalyzeConf

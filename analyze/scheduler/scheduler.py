@@ -36,7 +36,7 @@ class Scheduler(object):
 
         se_key=self.filter.select(self.se_mgr.stats_get())
         if not se_key:
-            LOG.error("filter do not select useful search engine")
+            LOG.error("filter do not select useful search engine for user:%s"%(username))
             return
 
         self.se_mgr.add_user(se_key,username)
