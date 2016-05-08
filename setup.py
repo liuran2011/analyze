@@ -19,6 +19,7 @@ setup(
         'console_scripts':[
             'report-gen=analyze.report_gen:main',
             'analyze=analyze.analyze_main:analyze_main',
+            'analyze-db-sync=analyze.analyze_db_sync:main',
             'search-engine-monitor=analyze.search_engine_monitor:main',
         ]
     }
