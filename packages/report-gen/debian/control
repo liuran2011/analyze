@@ -1,0 +1,14 @@
+Source: analyze
+Section: python
+Priority: optional
+Maintainer: liuran <liuran-001@126.com>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.4
+Homepage: 
+
+Package: report-gen
+Architecture: any
+Depends: python-analyze,
+Description: Report generator for analyze.
+    This package contains report generation function for 
+    analyze.

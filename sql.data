@@ -1,0 +1,4 @@
+insert into user(name,email,mobile_phone,permission,password,company,monitor_keyword) values('admin','admin@126.com','13851403378','admin','admin','admin','abc');
+insert into user(name,email,mobile_phone,permission,password,company,monitor_keyword) values('liuran','liuran-001@126.com','12345678901','admin','liuran','zte','abc');
+
+insert into result(

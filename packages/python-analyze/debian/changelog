@@ -1,0 +1,5 @@
+analyze (VERSION) unstable; urgency=low
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- root <liuran-001@126.com>  Mon, 20 Jul 2015 09:10:03 -0400

@@ -1,0 +1,20 @@
+Source: analyze
+Section: python
+Priority: optional
+Maintainer: liuran <liuran-001@126.com>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.4
+Homepage: 
+
+Package: python-analyze
+Architecture: any
+Depends: 
+    python-gevent,
+    python-flask,
+    python-kombu,
+    python-sqlalchemy,
+    python-psutil,
+    python-reportlab
+Description: Python source code for analyze.
+    This package contains python source code for 
+    analyze function.
