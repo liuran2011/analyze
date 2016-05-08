@@ -6,9 +6,9 @@ Build-Depends: debhelper (>= 8.0.0)
 Standards-Version: 3.9.4
 Homepage: 
 
-Package: report-gen
+Package: search-engine
 Architecture: any
-Depends: python-analyze,
-Description: Report generator for analyze.
-    This package contains report generation function for 
+Depends: python-analyze, analyze-common
+Description: Search engine for analyze.
+    This package contains search engine function for 
     analyze.

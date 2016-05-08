@@ -6,7 +6,14 @@
 
 override_dh_install:
 	dh_install --fail-missing
-	install -d $(CURDIR)/debian/report-gen/etc/analyze
-	install -d $(CURDIR)/debian/python-analyze/var/log/analyze
-	cp -r $(SB_TOP)/etc/report_gen.conf $(CURDIR)/debian/report-gen/etc/analyze/ 
+	install -d $(CURDIR)/debian/search-engine/etc/analyze
+	install -d $(CURDIR)/debian/search-engine/etc/init
+	install -d $(CURDIR)/debian/search-engine/etc/init.d
+	install -d $(CURDIR)/debian/search-engine/var/log/analyze
+	install -d $(CURDIR)/debian/search-engine/var/lib/analyze
+	cp -r $(SB_TOP)/etc/analyze/supervisord_search_engine.conf $(CURDIR)/debian/search-engine/etc/analyze/supervisord_search_engine.conf
+	cp -r $(SB_TOP)/etc/analyze/supervisord_search_engine_files $(CURDIR)/debian/search-engine/etc/analyze/
+	cp -r $(SB_TOP)/etc/analyze/search_engine $(CURDIR)/debian/search-engine/etc/analyze/
+	cp -r $(SB_TOP)/etc/init/supervisor-search-engine.conf $(CURDIR)/debian/search-engine/etc/init/
+	cp -r $(SB_TOP)/etc/init.d/search-engine $(CURDIR)/debian/search-engine/etc/init.d/
 
