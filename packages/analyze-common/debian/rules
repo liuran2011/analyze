@@ -1,0 +1,14 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+%:
+	dh $@
+
+override_dh_install:
+	dh_install --fail-missing
+	install -d $(CURDIR)/debian/analyze-common/etc/analyze
+	install -d $(CURDIR)/debian/analyze-commo/etc/init
+	install -d $(CURDIR)/debian/analyze-common/etc/init.d
+	install -d $(CURDIR)/debian/analyze-common/var/log/analyze
+	install -d $(CURDIR)/debian/analyze-common/var/lib/analyze
+	cp -r $(SB_TOP)/etc/analyze/analyze.conf $(CURDIR)/debian/analyze-common/etc/analyze/

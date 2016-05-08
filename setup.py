@@ -7,6 +7,9 @@ setup(
     author_email="liuran-001@126.com",
     description="analyze function",
     packages=find_packages(),
+	package_data={
+		'':['*.ttc']
+	},
     install_requires=[
         'gevent',
         'Flask',

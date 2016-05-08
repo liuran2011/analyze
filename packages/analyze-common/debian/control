@@ -6,9 +6,9 @@ Build-Depends: debhelper (>= 8.0.0)
 Standards-Version: 3.9.4
 Homepage: 
 
-Package: report-gen
+Package: analyze-common
 Architecture: any
-Depends: python-analyze,analyze-common
-Description: Report generator for analyze.
-    This package contains report generation function for 
+Depends: 
+Description: Command cofigure files for analyze.
+    This package contains common configuratio files for 
     analyze.

@@ -12,6 +12,7 @@ Depends:
     python-gevent,
     python-flask,
     python-kombu,
+	python-mysqldb,
     python-sqlalchemy,
     python-psutil,
     python-reportlab
