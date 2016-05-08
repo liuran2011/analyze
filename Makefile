@@ -18,6 +18,14 @@ python-analyze-deb: env
 	sed -i 's/VERSION/$(VERSION)/' $(BUILDDIR)/debian/changelog
 	cd $(BUILDDIR); fakeroot debian/rules binary
 
+analyze-deb: env
+	$(eval PKGNAME=$(subst -deb,,$@))
+	$(eval BUILDDIR=$(BUILD_TOP)/$(PKGNAME))
+	if [ ! -d $(BUILDDIR) ]; then mkdir $(BUILDDIR); fi
+	cp -r packages/$(PKGNAME)/debian $(BUILDDIR)
+	sed -i 's/VERSION/$(VERSION)/' $(BUILDDIR)/debian/changelog
+	cd $(BUILDDIR); fakeroot debian/rules binary
+
 analyze-common-deb: env
 	$(eval PKGNAME=$(subst -deb,,$@))
 	$(eval BUILDDIR=$(BUILD_TOP)/$(PKGNAME))

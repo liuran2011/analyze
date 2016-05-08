@@ -8,8 +8,7 @@ Homepage:
 
 Package: analyze
 Architecture: any
-Depends: mysql-server-5.5,
-
-Description: Configuration files for analyze. 
-    This package contains configuration and init files for 
-    analyze function.
+Depends: python-analyze, analyze-common,mysql-server-5.5,rabbitmq-server
+Description: Analyze configuration files for analyze.
+    This package contains analyze function for 
+    analyze.

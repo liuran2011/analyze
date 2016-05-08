@@ -2,14 +2,17 @@
 # -*- makefile -*-
 
 %:
-	dh $@  --with-python2
-
-override_dh_auto_build:
-	python setup.py build; \
-	python setup.py install --root=$(BUILD_TOP)/tmp/python-analyze
-	dh_auto_build
+	dh $@
 
 override_dh_install:
 	dh_install --fail-missing
-	install -d $(CURDIR)/debian/python-analyze/var/log/analyze
+	install -d $(CURDIR)/debian/analyze/etc/analyze
+	install -d $(CURDIR)/debian/analyze/etc/init
+	install -d $(CURDIR)/debian/analyze/etc/init.d
+	install -d $(CURDIR)/debian/analyze/var/log/analyze
+	install -d $(CURDIR)/debian/analyze/var/lib/analyze
+	cp -r $(SB_TOP)/etc/analyze/supervisord_analyze.conf $(CURDIR)/debian/analyze/etc/analyze/supervisord_analyze.conf
+	cp -r $(SB_TOP)/etc/analyze/supervisord_analyze_files $(CURDIR)/debian/analyze/etc/analyze/
+	cp -r $(SB_TOP)/etc/init/supervisor-analyze.conf $(CURDIR)/debian/analyze/etc/init/
+	cp -r $(SB_TOP)/etc/init.d/analyze $(CURDIR)/debian/analyze/etc/init.d/
 
