@@ -13,7 +13,7 @@ class Generator(BasicGenerator):
     def __init__(self,conf,env,db,notify):
         super(Generator,self).__init__(conf,env,db,notify)
         
-        pdfmetrics.registerFont(ttfonts.TTFont('song','analyze/fonts/simsun.ttc'))
+        pdfmetrics.registerFont(ttfonts.TTFont('song','%s/fonts/simsun.ttc'%(self.env.share_dir())))
         self.style=copy.deepcopy(getSampleStyleSheet()['Normal'])
         self.style.fontName='song'
         self.style.fontSize=12

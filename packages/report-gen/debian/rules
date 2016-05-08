@@ -11,8 +11,10 @@ override_dh_install:
 	install -d $(CURDIR)/debian/report-gen/etc/init.d
 	install -d $(CURDIR)/debian/report-gen/var/log/analyze
 	install -d $(CURDIR)/debian/report-gen/var/lib/analyze
+	install -d $(CURDIR)/debian/report-gen/usr/share/analyze
 	cp -r $(SB_TOP)/etc/analyze/report_gen.conf $(CURDIR)/debian/report-gen/etc/analyze/
 	cp -r $(SB_TOP)/etc/analyze/supervisord_report_gen.conf $(CURDIR)/debian/report-gen/etc/analyze/supervisord_report_gen.conf
 	cp -r $(SB_TOP)/etc/analyze/supervisord_report_gen_files $(CURDIR)/debian/report-gen/etc/analyze/supervisord_report_gen_files
 	cp -r $(SB_TOP)/etc/init/supervisor-report-gen.conf $(CURDIR)/debian/report-gen/etc/init/supervisor-report-gen.conf
 	cp -r $(SB_TOP)/etc/init.d/report-gen $(CURDIR)/debian/report-gen/etc/init.d/report-gen
+	cp -r $(SB_TOP)/fonts $(CURDIR)/debian/report-gen/usr/share/analyze/

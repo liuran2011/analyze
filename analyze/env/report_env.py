@@ -15,6 +15,9 @@ class ReportEnv(Env):
     def run_dir(self):
         return REPORT_RUN_DIR
 
+    def share_dir(self):
+        return SHARE_DIR
+
     @staticmethod
     def check():
         Env.check()

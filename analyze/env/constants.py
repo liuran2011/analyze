@@ -1,6 +1,7 @@
 LOG_DIR="/var/log/analyze"
 RUN_DIR="/var/run/analyze"
 LIB_DIR="/var/lib/analyze"
+SHARE_DIR="/usr/share/analyze"
 CONF_DIR="/etc/analyze"
 ANALYZE_CONF_FILE="analyze.conf"
 

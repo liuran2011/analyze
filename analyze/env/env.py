@@ -13,9 +13,15 @@ class Env(object):
 
     def log_dir(self):
         return LOG_DIR
+	
+	def share_dir(self):
+		return SHARE_DIR
 
     @staticmethod
     def check():
+        if not os.path.exists(SHARE_DIR):
+            os.makedirs(SHARE_DIR)
+
         if not os.path.exists(LOG_DIR):
             os.makedirs(LOG_DIR)
 
